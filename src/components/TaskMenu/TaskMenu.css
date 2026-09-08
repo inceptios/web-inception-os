@@ -1,0 +1,75 @@
+#task-menu-div {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 999;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+    user-select: none;
+
+    #task-menu {
+        z-index: 3;
+        padding: 20px;
+        position: absolute;
+        left: 1rem;
+        width: 25rem;
+        height: 50%;
+        max-height: 680px;
+        background: var(--taskbar-bg);
+        backdrop-filter: blur(20px);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        border: 0.4px solid rgba(210, 205, 205, 0.622);
+        border-radius: 20px;
+        transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out, transform 0.2s ease-in-out;;
+
+        #task-menu-grid {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: max-content;
+            gap: 12px;
+            justify-content: center;
+            align-items: start;
+        }
+
+        .menu-button {
+            background: none;
+            outline: none;
+            border: none;
+            padding: 8px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            .menu-btn-img {
+                width: 4rem;
+            }
+        }
+
+        .menu-button:hover {
+            background: rgb(150, 148, 148);
+        }
+
+        .menu-button:active {
+            background: rgb(128, 91, 91);
+        }
+    }
+
+    .menu-visible {
+        /* transform: translateY(0); */
+        animation: slideUpFadeIn 0.2s ease-out forwards;
+    }
+
+    .menu-hidden {
+        opacity: 0px;
+        visibility: hidden;
+        pointer-events: none;
+        transform:translateY(150%)
+    }
+}

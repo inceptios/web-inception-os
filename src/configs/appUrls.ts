@@ -1,0 +1,1 @@
+export const customFileExplorer:string = import.meta.env.VITE_CUSTOM_FILE_EXPLORER

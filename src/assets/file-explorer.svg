@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <!-- Back yellow folder tab -->
+  <path d="M2 6C2 4.895 2.895 4 4 4H9.5C10.03 4 10.539 4.21 10.914 4.586L12 5.672C12.375 6.047 12.884 6.257 13.414 6.257H20C21.105 6.257 22 7.153 22 8.257V18C22 19.105 21.105 20 20 20H4C2.895 20 2 19.105 2 18V6Z" fill="#F6C343"/>
+  
+  <!-- Blue document sticking out -->
+  <rect x="5" y="7" width="14" height="8" rx="1" fill="#4B89F4"/>
+  
+  <!-- Front lighter yellow folder flap -->
+  <path d="M2.5 10.5C2.5 9.672 3.172 9 4 9H20C20.828 9 21.5 9.672 21.5 10.5V18C21.5 19.105 20.605 20 19.5 20H4.5C3.395 20 2.5 19.105 2.5 18V10.5Z" fill="#F8D775"/>
+</svg>

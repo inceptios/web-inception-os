@@ -1,0 +1,174 @@
+.app-window {
+    /* border:2px solid black; */
+
+    position: absolute;
+    padding: 0.3rem;
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    box-shadow: 0px 0px 20px 5px rgba(106, 104, 104, 0.25);
+    border: 0.4px solid rgba(210, 205, 205, 0.622);
+
+    .dimension-se {
+        display: block;
+        /* border:1px green solid; */
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 1rem;
+        height: 1rem;
+        cursor: se-resize;
+    }
+
+    .dimension-sw {
+        display: block;
+        /* border:1px orangered solid; */
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 1rem;
+        height: 1rem;
+        cursor: sw-resize;
+    }
+
+    .dimension-nw {
+        display: block;
+        /* border:1px blue solid; */
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1rem;
+        height: 1rem;
+        cursor: nw-resize;
+    }
+
+    .dimension-ne {
+        display: block;
+        /* border:1px brown solid; */
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 0.4rem;
+        height: 0.4rem;
+        cursor: ne-resize;
+    }
+
+    .dimension-e {
+        display: block;
+        /* background-color: blue; */
+        position: absolute;
+        top: 1rem;
+        right: 0;
+        width: 0.3rem;
+        height: calc(100% - 2rem);
+        cursor: e-resize;
+    }
+
+    .dimension-w {
+        display: block;
+        /* background-color: red; */
+        position: absolute;
+        top: 1rem;
+        left: 0;
+        width: 1rem;
+        height: calc(100% - 2rem);
+        cursor: w-resize;
+    }
+
+    .dimension-n {
+        display: block;
+        /* background-color: green; */
+        position: absolute;
+        top: 0;
+        left: 1rem;
+        height: 0.5rem;
+        width: calc(100% - 2rem);
+        cursor: n-resize;
+    }
+
+    .dimension-s {
+        display: block;
+        /* background-color: yellow; */
+        position: absolute;
+        bottom: 0;
+        left: 1rem;
+        height: 1rem;
+        width: calc(100% - 2rem);
+        cursor: s-resize;
+    }
+
+
+    .app-title {
+        width: 100%;
+        border-bottom: 1px solid red;
+        display: flex;
+        flex-direction: row;
+        justify-content: start;
+        align-items: center;
+        gap: 6px;
+        
+        .drag-window{
+            display: flex;
+            flex-direction: row;
+            flex-grow: 1;
+            align-items: center;
+            gap:6px;
+            .app-title-name {
+                padding: 0px;
+                margin: 0px;
+            }
+        }
+
+
+        .window-buttons {
+            display: flex;
+            flex-direction: row;
+            margin-right: 0.2rem;
+
+            .window-button {
+                border: none;
+                background: none;
+                height: 1.8rem;
+                width: 1.8rem;
+            }
+
+            .minimise {
+                border:1px solid blue;
+            }
+            .minimise:hover{
+                background-color: blue;
+                color:white;
+            }
+
+            .close{
+                border:1px solid red;
+                /* border-radius:0px 15px 0px 0px; */
+            }
+            .close:hover{
+                background-color: red;
+            }
+
+        }
+    }
+
+    .app-body {
+        width: 100%;
+        flex: 1;
+    }
+
+}
+
+.grab {
+    cursor: grab;
+}
+
+.grabing {
+    cursor: grabbing;
+}
+
+.windowActive {
+    z-index: 3;
+}
