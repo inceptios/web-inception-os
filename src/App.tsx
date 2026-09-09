@@ -4,6 +4,7 @@ import './App.css'
 import DesktopLayout from './components/DesktopLayout/DesktopLayout'
 import TaskMenu from './components/TaskMenu/TaskMenu'
 import DesktopWindowContainer from '@components/WindowManager/DesktopWindowContainer'
+import 'web-inception-sdk/style.css'
 
 function App() {
   const [tastMenuOpen,setTaskMenuOpen] = useState<boolean>(false)

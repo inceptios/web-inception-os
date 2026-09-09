@@ -1,0 +1,7 @@
+#system-setting-div{
+    display: flex;
+    min-height: 0;
+}
+.scaffold{
+    height: 100%;
+}

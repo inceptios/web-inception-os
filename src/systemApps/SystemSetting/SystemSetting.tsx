@@ -1,46 +1,72 @@
+import { Scaffold } from "web-inception-sdk"
+import './SystemSettings.css'
+
 const SystemSetting = () => {
   return (
-    <div id="system-setting-div">
-      Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-      Dolores totam commodi maxime quia voluptatem quas optio nemo 
-      architecto earum? Quibusdam cum ratione nemo, 
-      dolorum provident dolore perferendis vero ullam dolorem.
+      <Scaffold classname="scaffold">
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+          Cumque, modi? Enim, facilis sit quod 
+          explicabo iusto ipsum iure beatae exercitationem, 
+          doloribus minus animi! Earum officiis at animi aperiam iste porro.</p>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+          Cumque, modi? Enim, facilis sit quod 
+          explicabo iusto ipsum iure beatae exercitationem, 
+          doloribus minus animi! Earum officiis at animi aperiam iste porro.</p>
 
-      Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-      Dolores totam commodi maxime quia voluptatem quas optio nemo 
-      architecto earum? Quibusdam cum ratione nemo, 
-      dolorum provident dolore perferendis vero ullam dolorem.
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+          Cumque, modi? Enim, facilis sit quod 
+          explicabo iusto ipsum iure beatae exercitationem, 
+          doloribus minus animi! Earum officiis at animi aperiam iste porro.</p>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+          Cumque, modi? Enim, facilis sit quod 
+          explicabo iusto ipsum iure beatae exercitationem, 
+          doloribus minus animi! Earum officiis at animi aperiam iste porro.</p>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+          Cumque, modi? Enim, facilis sit quod 
+          explicabo iusto ipsum iure beatae exercitationem, 
+          doloribus minus animi! Earum officiis at animi aperiam iste porro.</p>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+          Cumque, modi? Enim, facilis sit quod 
+          explicabo iusto ipsum iure beatae exercitationem, 
+          doloribus minus animi! Earum officiis at animi aperiam iste porro.</p>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+          Cumque, modi? Enim, facilis sit quod 
+          explicabo iusto ipsum iure beatae exercitationem, 
+          doloribus minus animi! Earum officiis at animi aperiam iste porro.</p>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+          Cumque, modi? Enim, facilis sit quod 
+          explicabo iusto ipsum iure beatae exercitationem, 
+          doloribus minus animi! Earum officiis at animi aperiam iste porro.</p>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+          Cumque, modi? Enim, facilis sit quod 
+          explicabo iusto ipsum iure beatae exercitationem, 
+          doloribus minus animi! Earum officiis at animi aperiam iste porro.</p>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+          Cumque, modi? Enim, facilis sit quod 
+          explicabo iusto ipsum iure beatae exercitationem, 
+          doloribus minus animi! Earum officiis at animi aperiam iste porro.</p>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+          Cumque, modi? Enim, facilis sit quod 
+          explicabo iusto ipsum iure beatae exercitationem, 
+          doloribus minus animi! Earum officiis at animi aperiam iste porro.</p>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+          Cumque, modi? Enim, facilis sit quod 
+          explicabo iusto ipsum iure beatae exercitationem, 
+          doloribus minus animi! Earum officiis at animi aperiam iste porro.</p>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+          Cumque, modi? Enim, facilis sit quod 
+          explicabo iusto ipsum iure beatae exercitationem, 
+          doloribus minus animi! Earum officiis at animi aperiam iste porro.</p>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+          Cumque, modi? Enim, facilis sit quod 
+          explicabo iusto ipsum iure beatae exercitationem, 
+          doloribus minus animi! Earum officiis at animi aperiam iste porro.</p>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+          Cumque, modi? Enim, facilis sit quod 
+          explicabo iusto ipsum iure beatae exercitationem, 
+          doloribus minus animi! Earum officiis at animi aperiam iste porro.</p>
 
-      Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-      Dolores totam commodi maxime quia voluptatem quas optio nemo 
-      architecto earum? Quibusdam cum ratione nemo, 
-      dolorum provident dolore perferendis vero ullam dolorem.
-
-      Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-      Dolores totam commodi maxime quia voluptatem quas optio nemo 
-      architecto earum? Quibusdam cum ratione nemo, 
-      dolorum provident dolore perferendis vero ullam dolorem.
-
-      Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-      Dolores totam commodi maxime quia voluptatem quas optio nemo 
-      architecto earum? Quibusdam cum ratione nemo, 
-      dolorum provident dolore perferendis vero ullam dolorem.
-
-      Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-      Dolores totam commodi maxime quia voluptatem quas optio nemo 
-      architecto earum? Quibusdam cum ratione nemo, 
-      dolorum provident dolore perferendis vero ullam dolorem.
-
-      Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-      Dolores totam commodi maxime quia voluptatem quas optio nemo 
-      architecto earum? Quibusdam cum ratione nemo, 
-      dolorum provident dolore perferendis vero ullam dolorem.
-
-      Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-      Dolores totam commodi maxime quia voluptatem quas optio nemo 
-      architecto earum? Quibusdam cum ratione nemo, 
-      dolorum provident dolore perferendis vero ullam dolorem.
-    </div>
+      </Scaffold>
   )
 }
 

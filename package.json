@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:expose":"vite --host",
+    "dev:expose": "vite --host",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -13,6 +13,7 @@
   "dependencies": {
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
+    "web-inception-sdk": "file:../os library/web-os-sdk",
     "zustand": "^5.0.15"
   },
   "devDependencies": {

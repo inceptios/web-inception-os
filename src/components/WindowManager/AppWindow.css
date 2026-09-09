@@ -109,13 +109,14 @@
         justify-content: start;
         align-items: center;
         gap: 6px;
-        
-        .drag-window{
+
+        .drag-window {
             display: flex;
             flex-direction: row;
             flex-grow: 1;
             align-items: center;
-            gap:6px;
+            gap: 6px;
+
             .app-title-name {
                 padding: 0px;
                 margin: 0px;
@@ -136,18 +137,20 @@
             }
 
             .minimise {
-                border:1px solid blue;
-            }
-            .minimise:hover{
-                background-color: blue;
-                color:white;
+                border: 1px solid blue;
             }
 
-            .close{
-                border:1px solid red;
+            .minimise:hover {
+                background-color: blue;
+                color: white;
+            }
+
+            .close {
+                border: 1px solid red;
                 /* border-radius:0px 15px 0px 0px; */
             }
-            .close:hover{
+
+            .close:hover {
                 background-color: red;
             }
 
@@ -155,8 +158,14 @@
     }
 
     .app-body {
-        width: 100%;
         flex: 1;
+        min-height: 0;
+        /* Critical: Prevents the body from stretching past the window if child content is huge */
+        min-width: 0;
+
+        /* Optional: Making the body a flex container often helps inner child components calculate their own 100% height for scrolling */
+        display: flex;
+        flex-direction: column;
     }
 
 }

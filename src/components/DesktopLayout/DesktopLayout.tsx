@@ -12,7 +12,8 @@ const DesktopLayout = ({children,onMenuOpen}:DesktopLayoutProps) => {
         display:'flex', 
         flexDirection:"column", 
         height:"100svh",
-        backgroundImage:"url(/wallpaper.jpg)"
+        backgroundImage:"url(/wallpaper.jpg)",
+        overflow:'hidden'
         }}>
         <main style={{
             flex:1,

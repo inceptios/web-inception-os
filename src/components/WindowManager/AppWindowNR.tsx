@@ -1,7 +1,6 @@
 import { Activity, useRef, useState, type PointerEvent, type ReactNode } from 'react'
 import './AppWindow.css'
 import type { WindowState } from './Types'
-import { useWindowManagementStore } from '@configs/windowManagementStore'
 
 type AppWindowNRProps = {
     children: ReactNode,
