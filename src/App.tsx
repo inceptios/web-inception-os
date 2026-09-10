@@ -1,17 +1,41 @@
 
 import { useEffect, useState } from 'react'
 import './App.css'
+import './index.css'
 import DesktopLayout from './components/DesktopLayout/DesktopLayout'
 import TaskMenu from './components/TaskMenu/TaskMenu'
 import DesktopWindowContainer from '@components/WindowManager/DesktopWindowContainer'
 import 'web-inception-sdk/style.css'
+import { useThemeStore } from './stores/ThemeStore'
 
 function App() {
   const [tastMenuOpen,setTaskMenuOpen] = useState<boolean>(false)
+  const {sourceTheme,setActiveTheme} = useThemeStore()
 
   useEffect(() => {
     console.log("the config apps link", import.meta.env.VITE_CUSTOM_FILE_EXPLORER)
-  }, [])
+
+    const savedTheme = localStorage.getItem('theme')
+    if(savedTheme){
+      setActiveTheme(savedTheme as 'light'|'dark','user')
+      return
+    }
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const applySystemTheme = ()=>{
+        setActiveTheme(mediaQuery.matches?"dark" : "light",'system')
+        console.log("Theme comming", mediaQuery.matches)
+    }
+    applySystemTheme()
+    const handleChange = () => {
+      applySystemTheme()
+    };
+    mediaQuery.addEventListener('change', handleChange);
+    return () => {
+      mediaQuery.removeEventListener('change', handleChange);
+    };
+  }, [sourceTheme])
 
   const onClose = () => {
     setTaskMenuOpen(false)

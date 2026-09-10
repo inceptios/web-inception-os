@@ -4,7 +4,7 @@
     align-items: center;
     border: 1px solid rgba(249, 249, 249, 0.088);
     border-radius: 20px;
-    color:var(--taskbar-text);
+    color:var(--text);
     background: var(--taskbar-bg);
     backdrop-filter: blur(20px);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
@@ -27,6 +27,7 @@
     }
 
     .start-icons{
+        color: var(--taskbar-text);
         background: none;
         border: none;
         outline: none;

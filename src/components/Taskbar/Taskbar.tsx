@@ -1,6 +1,6 @@
 import './Taskbar.css'
 import ReactImg from '../../assets/react.svg'
-import { useWindowManagementStore, } from '@configs/windowManagementStore'
+import { useWindowManagementStore, } from '../../stores/windowManagementStore'
 
 const Taskbar = ({ onMenuOpen }: { onMenuOpen: () => void }) => {
     const { activeWindows, setWindowState, setActiveWindow } = useWindowManagementStore()
@@ -11,11 +11,14 @@ const Taskbar = ({ onMenuOpen }: { onMenuOpen: () => void }) => {
             </button>
             {activeWindows.map(item => (
                 <button className={`start-icons 
-                    ${item.active?"task-active":""} 
-                    ${item.windowState==="maximised"? "task-maximised":""}`} 
+                    ${item.active ? "task-active" : ""} 
+                    ${item.windowState === "maximised" ? "task-maximised" : ""}`}
                     key={item.id}
                     onClick={() => {
-                        if (item.windowState === "minimised") {
+                        if(!item.active){
+                            setActiveWindow(item.id)
+                        }
+                        else if (item.windowState === "minimised") {
                             setActiveWindow(item.id)
                             setWindowState(item.id, "maximised")
                         }

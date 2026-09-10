@@ -2,32 +2,33 @@
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
+  
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
 
   color-scheme: light dark;
 
   --taskbar-text: #000000;
   --taskbar-bg: rgba(255, 255, 255, 0.2);
 
+
+  --primary: #618fda;
+  --primary-text: rgb(51, 48, 48);
+
+  --primary-active: #286ede;
+  --primary-active-text: white;
+
+  --window-bg: #f3f4f6;
+  --window-text: #111827;
 }
 
 body {
   margin: 0 !important;
+  font-family: sans-serif;
+  transition: background-color 0.4s ease-in-out 0.15s, color 0.4s ease-in-out 0.15s;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
+[data-theme="dark"] {
     --text: #9ca3af;
     --text-h: #f3f4f6;
     --bg: #16171d;
@@ -42,6 +43,7 @@ body {
 
     --taskbar-text: #ffffff;
     --taskbar-bg: rgba(0, 0, 0, 0.078);
-  }
 
+    --window-bg: #1E293B;
+    --window-text: #F8FAFC;
 }

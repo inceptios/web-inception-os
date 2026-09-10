@@ -137,6 +137,7 @@ const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, o
 
     return (
         <Activity mode={`${windowState === "maximised" ? 'visible' : 'hidden'}`}>
+            {isActive && <title>{title}</title>}
             <div
                 className={`app-window ${isActive ? 'windowActive' : ''}`}
                 style={{
@@ -208,11 +209,11 @@ const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, o
                 </div>
 
                 <div
-                    className={`app-title ${isStateDraggin ? 'grabing' : 'grab'}`}
+                    className={`app-title`}
 
                 >
                     <div
-                        className='drag-window'
+                        className={`drag-window ${isStateDraggin ? 'grabing' : 'grab'}`}
                         onPointerDown={handlePointerDown}
                         onPointerUp={handlePointerUp}
                         onPointerMove={handlePointerMove}
@@ -224,7 +225,7 @@ const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, o
                     </div>
                     <div className='window-buttons'>
                         <button
-                            className='window-button minimise'
+                            className={`window-button ${isActive?"minimise":""}`}
                             onClick={
                                 () => {
                                     console.log("onMInimize")
@@ -235,7 +236,7 @@ const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, o
                             -
                         </button>
                         <button
-                            className='window-button close'
+                            className={`window-button ${isActive?"close":""}`}
                             onClick={() => {
                                 console.log("ON close")
                                 onClose()

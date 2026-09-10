@@ -1,33 +1,33 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import './TaskMenu.css'
 import { OsAppStore } from '@configs/osAppStore'
-import { useWindowManagementStore } from '@configs/windowManagementStore'
+import { useWindowManagementStore } from '../../stores/windowManagementStore'
 
 type TaskMenuProps = {
-    menuVisible:boolean,
+    menuVisible: boolean,
     onClose: () => void
 }
 
-const TaskMenu = ({ menuVisible,onClose }: TaskMenuProps): ReactNode => {
+const TaskMenu = ({ menuVisible, onClose }: TaskMenuProps): ReactNode => {
     const [isRendered, setIsRendered] = useState<boolean>(menuVisible)
     const [isAnimated, setIsAnimated] = useState<boolean>(false)
     const AppsArray = Object.entries(OsAppStore)
     const { addWindow } = useWindowManagementStore()
 
 
-    useEffect(()=>{
-        if(menuVisible){
+    useEffect(() => {
+        if (menuVisible) {
             setIsRendered(true);
             setTimeout(() => {
                 setIsAnimated(true)
             }, 20);
         }
-        else{
+        else {
             setIsAnimated(false)
         }
-    },[menuVisible])
+    }, [menuVisible])
 
-    if(!isRendered) return null;
+    if (!isRendered) return null;
 
     return (
         <>
@@ -35,9 +35,9 @@ const TaskMenu = ({ menuVisible,onClose }: TaskMenuProps): ReactNode => {
                 id="task-menu-div"
             >
                 <div id="task-menu"
-                    className={`${isAnimated?"menu-visible":"menu-hidden"}`}
-                    onTransitionEnd={()=>{
-                        if(!menuVisible){
+                    className={`${isAnimated ? "menu-visible" : "menu-hidden"}`}
+                    onTransitionEnd={() => {
+                        if (!menuVisible) {
                             setIsRendered(false)
                         }
                     }}

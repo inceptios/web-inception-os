@@ -13,7 +13,7 @@
   "dependencies": {
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "web-inception-sdk": "file:../os library/web-os-sdk/web-inception-sdk-0.0.0.tgz",
+    "web-inception-sdk": "file:../os library/web-os-sdk",
     "zustand": "^5.0.15"
   },
   "devDependencies": {
