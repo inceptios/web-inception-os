@@ -4,23 +4,24 @@ import { systemApps } from '@configs/systemApps'
 
 const DesktopWindowContainer = () => {
 
-  const { activeWindows, setActiveWindow, setWindowState, removeWindow } = useWindowManagementStore()
+  const { activeWindows, setActiveWindow, setWindowState, removeWindow, focusedWindow } = useWindowManagementStore()
 
   return (
     <div style={{ position: "relative" }}>
-      {activeWindows.map(window => {
+      {Object.entries(activeWindows).map(([id,window] )=> {
         const SystemComponent = window.isSystem && window.systemComponentId ? systemApps[window.systemComponentId] : null
 
 
         return <AppWindowNR
           key={window.id}
           title={window.name}
-          isActive={window.active}
+          isActive={id===focusedWindow}
           icon={window.icon}
-          onActive={() => setActiveWindow(window.id)}
-          onMinimise={() => setWindowState(window.id, 'minimised')}
-          onClose={() => { removeWindow(window.id) }}
+          onActive={() => setActiveWindow(id)}
+          onMinimise={() => setWindowState(id, 'minimised')}
+          onClose={() => { removeWindow(id) }}
           windowState={window.windowState}
+          menuItems={window.windowMenuItems}
         >{SystemComponent ? <SystemComponent /> :
           "not system"
           }

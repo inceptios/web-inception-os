@@ -1,50 +1,62 @@
 
 import './SystemSettings.css'
 import LeftSettingBar from "./LeftSettingBar"
-import { useState, type FC } from "react"
+import { use, useEffect, useState, type FC } from "react"
 import ThemeSetting from "./components/ThemeSetting"
 import GeneralSetting from "./components/GeneralSetting"
 import { Scaffold } from 'web-inception-sdk/ui'
-import ThemeIcon from '@assets/theme-icon.svg'
-import AboutIcons from '@assets/about-icon.svg'
+import { useMenu } from '@components/WindowManager/hooks/useMenu'
 
 const settingScreensTitles = {
-  theme: "theme",
-  general: "general"
+  theme: "Theme",
+  about: "About"
 } as const
 
 export type titleType = keyof typeof settingScreensTitles
+export type titleNameType = typeof settingScreensTitles[keyof typeof settingScreensTitles]
 
 export type SettingScreen = {
-  title: titleType,
+  title: titleNameType,
   component: FC,
-  icon:string,
+  icon: string,
 }
 
 const SettingScreens: Record<titleType, SettingScreen> = {
-  general: {
-    title: "general",
-    component: GeneralSetting,
-    icon: AboutIcons,
-  },
   theme: {
-    title: "theme",
+    title: "Theme",
     component: ThemeSetting,
-    icon: ThemeIcon
+    icon: '/theme-icon.svg'
+  },
+  about: {
+    title: "About",
+    component: GeneralSetting,
+    icon: '/about-icon.svg',
   },
 }
 
+
 const SystemSetting = () => {
-
-  const [settingScreen, setSettingScreen] = useState<titleType>("theme")
-
-  const CurrentSettingScreen = SettingScreens[settingScreen].component
   
-  return (   
+  const [settingScreen, setSettingScreen] = useState<titleType>("theme")
+  
+  const CurrentSettingScreen = SettingScreens[settingScreen].component
+    
+  const MenuActionMap:Record<string,()=>void> = {
+    testing:()=>{
+      console.log("Tesing menu from app.",settingScreen)
+    },
+    openTheme:()=>{
+      setSettingScreen("theme")
+    }
+  }
+  
+  useMenu({menuActionMap:MenuActionMap})
+
+  return (
     <Scaffold
       classname="scaffold"
       leftSideBar={<LeftSettingBar
-        settingsOptions={Object.values(SettingScreens)}
+        settingsOptions={SettingScreens}
         setCurrentSettingOption={(opt: titleType) => { setSettingScreen(opt) }}
         currentOption={settingScreen}
       />}

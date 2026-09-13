@@ -4,22 +4,22 @@ import { MenuButton } from "web-inception-sdk/ui"
 
 
 type LeftSettingBarProps = {
-    settingsOptions: SettingScreen[],
-    currentOption:titleType,
+    settingsOptions: Record<titleType, SettingScreen>,
+    currentOption: titleType,
     setCurrentSettingOption: (opt: titleType) => void
 }
 
-const LeftSettingBar = ({ settingsOptions, setCurrentSettingOption,currentOption }: LeftSettingBarProps): ReactNode => {
+const LeftSettingBar = ({ settingsOptions, setCurrentSettingOption, currentOption }: LeftSettingBarProps): ReactNode => {
     return (
         <div
             className="left-setting-bar"
         >{
-                settingsOptions.map(opt => (
+                Object.entries(settingsOptions).map(([id, opt]) => (
                     <MenuButton
                         key={opt.title}
-                        onClick={() => { setCurrentSettingOption(opt.title) }}
+                        onClick={() => { setCurrentSettingOption(id as titleType) }}
                         icon={opt.icon}
-                        isCurrent={currentOption === opt.title}
+                        isCurrent={currentOption === id}
                     >
                         {opt.title}
                     </MenuButton>
