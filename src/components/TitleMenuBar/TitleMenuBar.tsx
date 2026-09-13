@@ -8,7 +8,7 @@ type TitleMenuBarProps = {
 const TitleMenuBar = ({ menuItems, onMenuClick }: TitleMenuBarProps) => {
     return (
         <div>
-            {Object.entries(menuItems).map(([id, menuItem]) => (
+            {Object.entries(menuItems).map(([id]) => (
                 <button key={id} onClick={() => {
                     onMenuClick.current?.(id)
                 }}

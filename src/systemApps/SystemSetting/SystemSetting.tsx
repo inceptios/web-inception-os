@@ -1,7 +1,7 @@
 
 import './SystemSettings.css'
 import LeftSettingBar from "./LeftSettingBar"
-import { use, useEffect, useState, type FC } from "react"
+import {useState, type FC } from "react"
 import ThemeSetting from "./components/ThemeSetting"
 import GeneralSetting from "./components/GeneralSetting"
 import { Scaffold } from 'web-inception-sdk/ui'
