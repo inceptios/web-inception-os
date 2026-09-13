@@ -1,11 +1,11 @@
 
 import { useEffect, useState } from 'react'
+import 'web-inception-sdk/style.css'
 import './App.css'
 import './index.css'
 import DesktopLayout from './components/DesktopLayout/DesktopLayout'
 import TaskMenu from './components/TaskMenu/TaskMenu'
 import DesktopWindowContainer from '@components/WindowManager/DesktopWindowContainer'
-import 'web-inception-sdk/style.css'
 import { useThemeStore } from './stores/ThemeStore'
 
 function App() {

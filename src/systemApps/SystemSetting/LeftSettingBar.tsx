@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 import type { SettingScreen, titleType } from "./SystemSetting"
-import { MenuButton } from "./contributionComponents/MenuButton.tsx/MenuButton"
+import { MenuButton } from "web-inception-sdk/ui"
+
 
 type LeftSettingBarProps = {
     settingsOptions: SettingScreen[],
@@ -11,7 +12,6 @@ type LeftSettingBarProps = {
 const LeftSettingBar = ({ settingsOptions, setCurrentSettingOption,currentOption }: LeftSettingBarProps): ReactNode => {
     return (
         <div
-            style={{ borderRight: 'solid 2px black' }}
             className="left-setting-bar"
         >{
                 settingsOptions.map(opt => (

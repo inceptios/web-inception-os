@@ -5,7 +5,8 @@ import { useState, type FC } from "react"
 import ThemeSetting from "./components/ThemeSetting"
 import GeneralSetting from "./components/GeneralSetting"
 import { Scaffold } from 'web-inception-sdk/ui'
-import SettingIcon from '@assets/setting.svg'
+import ThemeIcon from '@assets/theme-icon.svg'
+import AboutIcons from '@assets/about-icon.svg'
 
 const settingScreensTitles = {
   theme: "theme",
@@ -24,12 +25,12 @@ const SettingScreens: Record<titleType, SettingScreen> = {
   general: {
     title: "general",
     component: GeneralSetting,
-    icon: SettingIcon,
+    icon: AboutIcons,
   },
   theme: {
     title: "theme",
     component: ThemeSetting,
-    icon: SettingIcon
+    icon: ThemeIcon
   },
 }
 
