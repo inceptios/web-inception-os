@@ -13,7 +13,7 @@ type menuButtonsRecersiveProps = {
     onButtonClick: React.RefObject<((id: string) => void) | null>
 }
 
-const MenuButtonsRecersive = ({ menuItem, onButtonClick}: menuButtonsRecersiveProps) => {
+export const MenuButtonsRecersive = ({ menuItem, onButtonClick}: menuButtonsRecersiveProps) => {
 
     const [activeSubMenuId, setActiveSubMenuId] = useState<string | null>(null)
 
