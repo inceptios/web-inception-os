@@ -157,11 +157,11 @@ const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, o
                         }
                     }
                     }
-                    onPointerEnter={() => {
-                        if (!isActive) {
-                            onActive()
-                        }
-                    }}
+                    // onPointerEnter={() => {
+                    //     if (!isActive) {
+                    //         onActive()
+                    //     }
+                    // }}
                 >
                     <div
                         className='dimension-se'
