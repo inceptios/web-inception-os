@@ -151,7 +151,7 @@ const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, o
                         width: `${windowSize.width}px`,
                         height: `${windowSize.height}px`
                     }}
-                    onClick={() => {
+                    onMouseDown={() => {
                         if (!isActive) {
                             onActive()
                         }
