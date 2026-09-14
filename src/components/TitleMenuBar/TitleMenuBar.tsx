@@ -1,7 +1,6 @@
 import type { menuItem } from "@configs/osAppStore"
-import { useState, type FC } from "react"
+import { useState } from "react"
 import './TitleMenuBar.css'
-import { createPortal } from "react-dom"
 
 type TitleMenuBarProps = {
     menuItems: Record<string, menuItem[]>,
