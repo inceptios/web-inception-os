@@ -33,6 +33,10 @@ const TaskMenu = ({ menuVisible, onClose }: TaskMenuProps): ReactNode => {
         <>
             <div
                 id="task-menu-div"
+                onClick={(e)=>{
+                    e.stopPropagation()
+                    onClose()
+                }}
             >
                 <div id="task-menu"
                     className={`${isAnimated ? "menu-visible" : "menu-hidden"}`}

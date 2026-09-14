@@ -20,6 +20,9 @@
 
   --window-bg: #f3f4f6;
   --window-text: #111827;
+
+  --title-menu-btn: #d4d5d8;
+  --title-menu-bg:rgba(210, 210, 210, 0.45);
 }
 
 body {
@@ -46,4 +49,7 @@ body {
 
   --window-bg: #1E293B;
   --window-text: #F8FAFC;
+
+  --title-menu-btn: #a0a0a5;
+  --title-menu-bg:rgba(11, 8, 8, 0.45);
 }

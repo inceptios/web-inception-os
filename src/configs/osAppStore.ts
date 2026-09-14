@@ -39,7 +39,62 @@ export const OsAppStore: Record<string, StoreApp> = {
                 menuId: "save",
                 title: "Save",
                 enabled: true,
-            }],
+                items: [
+                    {
+                        menuId: "save",
+                        title: "Save",
+                        enabled: true,
+                    },
+                    {
+                        menuId: "saveas",
+                        title: "Save As",
+                        enabled: true,
+                    },
+                    {
+                        menuId: "download",
+                        title: "Download this Settings",
+                        enabled: true,
+                    },
+                ]
+            },
+            {
+                menuId: "saveas",
+                title: "Save As",
+                enabled: true,
+            },
+            {
+                menuId: "download",
+                title: "Download this Settings",
+                enabled: true,
+            },
+            {
+                menuId: "delete",
+                title: "Delete storage",
+                enabled: true,
+                items: [
+                    {
+                        menuId: "save",
+                        title: "Save",
+                        enabled: true,
+                    },
+                    {
+                        menuId: "saveas",
+                        title: "Save As",
+                        enabled: true,
+                    },
+                    {
+                        menuId: "download",
+                        title: "Download this Settings",
+                        enabled: true,
+                    },
+                ]
+            },
+            {
+                menuId: "reset",
+                title: "Logout",
+                enabled: true,
+            },
+            ],
             Edit: [{
                 menuId: "testing",
                 title: "Testing c",
