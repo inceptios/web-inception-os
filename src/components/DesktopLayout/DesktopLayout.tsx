@@ -14,14 +14,28 @@ const DesktopLayout = ({children,onMenuOpen}:DesktopLayoutProps) => {
         height:"100svh",
         backgroundImage:"url(/wallpaper.jpg)",
         overflow:'hidden'
-        }}>
+        }}
+        onContextMenu={(e)=>{
+            e.preventDefault
+        }}
+        >
         <main style={{
             flex:1,
             position:'relative'
-            }}>
+            }}
+            onContextMenu={(e)=>{
+                e.preventDefault()
+                e.stopPropagation()
+            }}
+            >
             {children}
         </main>
-        <footer style={{padding:'1rem'}}>
+        <footer style={{padding:'1rem'}}
+            onContextMenu={(e)=>{
+                e.preventDefault()
+                console.log("Disabled for footer")
+            }}
+        >
             <Taskbar onMenuOpen={onMenuOpen}/>
         </footer>
     </div>

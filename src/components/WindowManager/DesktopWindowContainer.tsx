@@ -7,15 +7,20 @@ const DesktopWindowContainer = () => {
   const { activeWindows, setActiveWindow, setWindowState, removeWindow, focusedWindow } = useWindowManagementStore()
 
   return (
-    <div style={{ position: "relative" }}>
-      {Object.entries(activeWindows).map(([id,window] )=> {
+    <div style={{ position: "relative" }}
+      onContextMenu={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+      }}
+    >
+      {Object.entries(activeWindows).map(([id, window]) => {
         const SystemComponent = window.isSystem && window.systemComponentId ? systemApps[window.systemComponentId] : null
 
 
         return <AppWindowNR
           key={window.id}
           title={window.name}
-          isActive={id===focusedWindow}
+          isActive={id === focusedWindow}
           icon={window.icon}
           onActive={() => setActiveWindow(id)}
           onMinimise={() => setWindowState(id, 'minimised')}

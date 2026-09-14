@@ -42,7 +42,8 @@ function App() {
   }
 
   return (
-    <DesktopLayout onMenuOpen={()=>setTaskMenuOpen(!tastMenuOpen)}>
+    <DesktopLayout onMenuOpen={()=>setTaskMenuOpen(!tastMenuOpen)}
+    >
       <TaskMenu menuVisible={tastMenuOpen} onClose={onClose}/>
       <DesktopWindowContainer/>
     </DesktopLayout>
