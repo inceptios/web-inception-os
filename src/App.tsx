@@ -7,6 +7,7 @@ import DesktopLayout from './components/DesktopLayout/DesktopLayout'
 import TaskMenu from './components/TaskMenu/TaskMenu'
 import DesktopWindowContainer from '@components/WindowManager/DesktopWindowContainer'
 import { useThemeStore } from './stores/ThemeStore'
+import ContextMenu from '@components/ContextMenu/ContextMenuBackdrop'
 
 function App() {
   const [tastMenuOpen,setTaskMenuOpen] = useState<boolean>(false)
@@ -42,9 +43,9 @@ function App() {
   }
 
   return (
-    <DesktopLayout onMenuOpen={()=>setTaskMenuOpen(!tastMenuOpen)}
-    >
+    <DesktopLayout onMenuOpen={()=>setTaskMenuOpen(!tastMenuOpen)}>
       <TaskMenu menuVisible={tastMenuOpen} onClose={onClose}/>
+      <ContextMenu/>
       <DesktopWindowContainer/>
     </DesktopLayout>
   )
