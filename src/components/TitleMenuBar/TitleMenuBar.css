@@ -1,0 +1,108 @@
+.title-menu-bar {
+    display: flex;
+    flex-direction: row;
+    z-index: 12;
+
+    .title-menu-button {
+        background: none;
+        border: none;
+        border-radius: 0.8rem;
+        color: var(--window-text);
+        padding: 0.3rem 0.8rem;
+    }
+
+    .btn-hover {
+        background: var(--title-menu-btn);
+    }
+
+    .title-menu-dropdown {
+        top: anchor(bottom);
+        left: anchor(left);
+        z-index: 12;
+        margin: 0.4rem 0rem;
+        color: var(--window-text);
+        /* background: var(--title-menu-bg);
+        backdrop-filter: blur(10px);
+        border: 0.4px solid rgba(210, 205, 205, 0.622); */
+        padding: 0.3rem;
+        border-radius: 0.7rem;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: start;
+
+        .sub-menu-overlay {
+            width: 100%;
+
+            .title-menu-sub-button {
+                width: 100%;
+                text-align: start;
+                background: none;
+                border: none;
+                border-radius: 0.4rem;
+                color: var(--window-text);
+                padding: 0.3rem 0.8rem;
+            }
+
+            .title-menu-sub-button:hover {
+                background: var(--primary);
+            }
+
+            .title-menu-sub-button-active {
+                background: var(--title-menu-bg);
+            }
+
+            .sub-menu-more-options {
+                width: inherit;
+                top: anchor(top);
+                left: anchor(right);
+                z-index: 12;
+                backdrop-filter: blur(10px);
+                margin: 0rem 0.8rem;
+                display: flex;
+                flex-direction: column;
+                align-items: start;
+                justify-content: start;
+                /* background: var(--title-menu-bg);
+                color: var(--window-text); */
+                
+                padding: 0.3rem;
+                border-radius: 0.7rem;
+            }
+
+            .sub-menu-more-options::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: -1;
+                border-radius: inherit;
+
+                background: var(--title-menu-bg);
+                backdrop-filter: blur(10px);
+                border: 0.4px solid rgba(210, 205, 205, 0.622);
+            }
+        }
+    }
+
+    .title-menu-dropdown::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: -1;
+        /* Push it behind the menu text */
+        border-radius: inherit;
+
+        background: var(--title-menu-bg);
+        backdrop-filter: blur(10px);
+        border: 0.4px solid rgba(210, 205, 205, 0.622);
+    }
+
+
+}

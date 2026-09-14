@@ -3,24 +3,24 @@ import ReactImg from '../../assets/react.svg'
 import { useWindowManagementStore, } from '../../stores/windowManagementStore'
 
 const Taskbar = ({ onMenuOpen }: { onMenuOpen: () => void }) => {
-    const { activeWindows, setWindowState, setActiveWindow } = useWindowManagementStore()
+    const { activeWindows,focusedWindow, setWindowState, setActiveWindow } = useWindowManagementStore()
     return (
         <div id="taskbar">
             <button id='start-button' onClick={onMenuOpen}>
                 <img src={ReactImg} />
             </button>
-            {activeWindows.map(item => (
+            {Object.entries(activeWindows).map(([id,item]) => (
                 <button className={`start-icons 
-                    ${item.active ? "task-active" : ""} 
+                    ${id=== focusedWindow? "task-active" : ""} 
                     ${item.windowState === "maximised" ? "task-maximised" : ""}`}
                     key={item.id}
                     onClick={() => {
-                        if(!item.active){
-                            setActiveWindow(item.id)
-                        }
-                        else if (item.windowState === "minimised") {
+                        if (item.windowState === "minimised") {
                             setActiveWindow(item.id)
                             setWindowState(item.id, "maximised")
+                        }
+                        else if(!(id === focusedWindow)){
+                            setActiveWindow(item.id)
                         }
                         else {
                             setWindowState(item.id, "minimised")

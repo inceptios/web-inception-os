@@ -1,6 +1,9 @@
 import { Activity, useRef, useState, type PointerEvent, type ReactNode } from 'react'
 import './AppWindow.css'
 import type { WindowState } from './Types'
+import { AppWindowContext } from './context/AppWindowMenuContext'
+import TitleMenuBar from '@components/TitleMenuBar/TitleMenuBar'
+import type { menuItem } from '@configs/osAppStore'
 
 type AppWindowNRProps = {
     children: ReactNode,
@@ -8,6 +11,7 @@ type AppWindowNRProps = {
     isActive: boolean,
     icon?: string,
     windowState: WindowState,
+    menuItems?:Record<string,menuItem[]>
     onActive: () => void,
     onMinimise: () => void,
     onClose: () => void,
@@ -22,7 +26,7 @@ type WindowSize = {
     height: number,
 }
 
-const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, onMinimise, onClose }: AppWindowNRProps) => {
+const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, onMinimise, onClose, menuItems }: AppWindowNRProps) => {
     const [windowPosition, setWindowPosition] = useState<WindowPosition>({
         x: 20,
         y: 80,
@@ -40,6 +44,7 @@ const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, o
     const startingPosition = useRef<WindowPosition>({
         x: 0, y: 0
     })
+    const menuFunctionRef = useRef<((id: string) => void) | null>(null);
 
     const startingSize = useRef<WindowSize>({
         width: 0, height: 0
@@ -136,122 +141,127 @@ const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, o
     }
 
     return (
-        <Activity mode={`${windowState === "maximised" ? 'visible' : 'hidden'}`}>
-            {isActive && <title>{title}</title>}
-            <div
-                className={`app-window ${isActive ? 'windowActive' : ''}`}
-                style={{
-                    transform: `translate(${windowPosition.x}px, ${windowPosition.y}px)`,
-                    width: `${windowSize.width}px`,
-                    height: `${windowSize.height}px`
-                }}
-                onClick={() => {
-                    if (!isActive) {
-                        onActive()
+        <AppWindowContext value={{ onMenuClickRef: menuFunctionRef }}>
+            <Activity mode={`${windowState === "maximised" ? 'visible' : 'hidden'}`}>
+                {isActive && <title>{title}</title>}
+                <div
+                    className={`app-window ${isActive ? 'windowActive' : ''}`}
+                    style={{
+                        transform: `translate(${windowPosition.x}px, ${windowPosition.y}px)`,
+                        width: `${windowSize.width}px`,
+                        height: `${windowSize.height}px`
+                    }}
+                    onClick={() => {
+                        if (!isActive) {
+                            onActive()
+                        }
                     }
-                }
-                }
-                onPointerEnter={() => {
-                    if (!isActive) {
-                        onActive()
                     }
-                }}
-            >
-                <div
-                    className='dimension-se'
-                    onPointerDown={(e) => handlePointerDownResize(e, "se")}
-                    onPointerMove={handlePointerMoveResizing}
-                    onPointerUp={handlePointerUpResize}
-                >
-                </div>
-                <div
-                    className='dimension-e'
-                    onPointerDown={(e) => handlePointerDownResize(e, "e")}
-                    onPointerMove={handlePointerMoveResizing}
-                    onPointerUp={handlePointerUpResize}
-                >
-                </div>
-                <div className='dimension-sw'
-                    onPointerDown={(e) => handlePointerDownResize(e, "sw")}
-                    onPointerMove={handlePointerMoveResizing}
-                    onPointerUp={handlePointerUpResize}
-                >
-                </div>
-                <div className='dimension-w'
-                    onPointerDown={(e) => handlePointerDownResize(e, "w")}
-                    onPointerMove={handlePointerMoveResizing}
-                    onPointerUp={handlePointerUpResize}
-                >
-                </div>
-                <div className='dimension-ne'
-                    onPointerDown={(e) => handlePointerDownResize(e, "ne")}
-                    onPointerMove={handlePointerMoveResizing}
-                    onPointerUp={handlePointerUpResize}
-                >
-                </div>
-                <div className='dimension-n'
-                    onPointerDown={(e) => handlePointerDownResize(e, "n")}
-                    onPointerMove={handlePointerMoveResizing}
-                    onPointerUp={handlePointerUpResize}
-                >
-                </div>
-                <div className='dimension-nw'
-                    onPointerDown={(e) => handlePointerDownResize(e, "nw")}
-                    onPointerMove={handlePointerMoveResizing}
-                    onPointerUp={handlePointerUpResize}
-                >
-                </div>
-                <div className='dimension-s'
-                    onPointerDown={(e) => handlePointerDownResize(e, "s")}
-                    onPointerMove={handlePointerMoveResizing}
-                    onPointerUp={handlePointerUpResize}
-                >
-                </div>
-
-                <div
-                    className={`app-title`}
-
+                    // onPointerEnter={() => {
+                    //     if (!isActive) {
+                    //         onActive()
+                    //     }
+                    // }}
                 >
                     <div
-                        className={`drag-window ${isStateDraggin ? 'grabing' : 'grab'}`}
-                        onPointerDown={handlePointerDown}
-                        onPointerUp={handlePointerUp}
-                        onPointerMove={handlePointerMove}
-                        onPointerLeave={handlePointerUp}
+                        className='dimension-se'
+                        onPointerDown={(e) => handlePointerDownResize(e, "se")}
+                        onPointerMove={handlePointerMoveResizing}
+                        onPointerUp={handlePointerUpResize}
                     >
-                        {icon !== "" && <img src={icon} width={24} height={24} />}
-                        <p className='app-title-name'>{title}</p>
-                        <div style={{ flexGrow: 1 }}></div>
                     </div>
-                    <div className='window-buttons'>
-                        <button
-                            className={`window-button ${isActive?"minimise":""}`}
-                            onClick={
-                                () => {
-                                    console.log("onMInimize")
-                                    onMinimise()
-                                }
-                            }
-                        >
-                            -
-                        </button>
-                        <button
-                            className={`window-button ${isActive?"close":""}`}
-                            onClick={() => {
-                                console.log("ON close")
-                                onClose()
-                            }}
-                        >
-                            x
-                        </button>
+                    <div
+                        className='dimension-e'
+                        onPointerDown={(e) => handlePointerDownResize(e, "e")}
+                        onPointerMove={handlePointerMoveResizing}
+                        onPointerUp={handlePointerUpResize}
+                    >
                     </div>
-                </div>
-                <div className='app-body'>
-                    {children}
-                </div>
+                    <div className='dimension-sw'
+                        onPointerDown={(e) => handlePointerDownResize(e, "sw")}
+                        onPointerMove={handlePointerMoveResizing}
+                        onPointerUp={handlePointerUpResize}
+                    >
+                    </div>
+                    <div className='dimension-w'
+                        onPointerDown={(e) => handlePointerDownResize(e, "w")}
+                        onPointerMove={handlePointerMoveResizing}
+                        onPointerUp={handlePointerUpResize}
+                    >
+                    </div>
+                    <div className='dimension-ne'
+                        onPointerDown={(e) => handlePointerDownResize(e, "ne")}
+                        onPointerMove={handlePointerMoveResizing}
+                        onPointerUp={handlePointerUpResize}
+                    >
+                    </div>
+                    <div className='dimension-n'
+                        onPointerDown={(e) => handlePointerDownResize(e, "n")}
+                        onPointerMove={handlePointerMoveResizing}
+                        onPointerUp={handlePointerUpResize}
+                    >
+                    </div>
+                    <div className='dimension-nw'
+                        onPointerDown={(e) => handlePointerDownResize(e, "nw")}
+                        onPointerMove={handlePointerMoveResizing}
+                        onPointerUp={handlePointerUpResize}
+                    >
+                    </div>
+                    <div className='dimension-s'
+                        onPointerDown={(e) => handlePointerDownResize(e, "s")}
+                        onPointerMove={handlePointerMoveResizing}
+                        onPointerUp={handlePointerUpResize}
+                    >
+                    </div>
 
-            </div >
-        </Activity>
+                    <div
+                        className={`app-title`}
+
+                    >
+                        <div
+                            className={`drag-window ${isStateDraggin ? 'grabing' : 'grab'}`}
+                            onPointerDown={handlePointerDown}
+                            onPointerUp={handlePointerUp}
+                            onPointerMove={handlePointerMove}
+                            onPointerLeave={handlePointerUp}
+                        >
+                            {icon !== "" && <img src={icon} width={24} height={24} />}
+                            <p className='app-title-name'>{title}</p>
+                            <div style={{ flexGrow: 1 }}></div>
+                        </div>
+                        <div className='window-buttons'>
+                            <button
+                                className={`window-button ${isActive ? "minimise" : ""}`}
+                                onClick={
+                                    () => {
+                                        console.log("onMInimize")
+                                        onMinimise()
+                                    }
+                                }
+                            >
+                                -
+                            </button>
+                            <button
+                                className={`window-button ${isActive ? "close" : ""}`}
+                                onClick={() => {
+                                    console.log("ON close")
+                                    onClose()
+                                }}
+                            >
+                                x
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        {menuItems && <TitleMenuBar menuItems={menuItems} onMenuClick={menuFunctionRef}/>}
+                    </div>
+                    <div className='app-body'>
+                        {children}
+                    </div>
+
+                </div >
+            </Activity>
+        </AppWindowContext>
     )
 }
 
