@@ -8,10 +8,10 @@ export interface taskbarItem {
     name: string,
 }
 
-interface WindowMangementStore {
+export interface WindowMangementStore {
     activeWindows: Record<string, ActiveWindow>,
     focusedWindow: string,
-    addWindow: (win: StoreApp) => void,
+    addWindow: (win: StoreApp, props?: object) => void,
     removeWindow: (id: string) => void,
     setActiveWindow: (id: string) => void,
     setWindowState: (id: string, winState: WindowState) => void,
@@ -21,7 +21,7 @@ interface WindowMangementStore {
 export const useWindowManagementStore = create<WindowMangementStore>((set) => ({
     activeWindows: {},
     focusedWindow: "",
-    addWindow: (win) => set(state => {
+    addWindow: (win, props) => set(state => {
         const randomId = Math.random() * 10000
         // const updatedWindows: ActiveWindow[] = state.activeWindows.map(windo => ({ ...windo, active: false }))
         console.log("Adding app ", win)
@@ -37,7 +37,8 @@ export const useWindowManagementStore = create<WindowMangementStore>((set) => ({
                     iframeUrl: win.endPoint ?? "",
                     isSystem: win.isSystemApp,
                     systemComponentId: win.id,
-                    windowMenuItems: win.menuItems
+                    windowMenuItems: win.menuItems,
+                    props: props
                 }
             },
             focusedWindow: `${win.id}-${randomId}`

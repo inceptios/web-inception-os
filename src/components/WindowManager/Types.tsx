@@ -10,5 +10,6 @@ export type ActiveWindow={
     iframeUrl?:string,
     isSystem?:boolean,
     systemComponentId?:string,
-    windowMenuItems?:Record<string,menuItem[]>
+    windowMenuItems?:Record<string,menuItem[]>,
+    props?: object
 }
