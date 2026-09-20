@@ -11,7 +11,9 @@ type AppWindowNRProps = {
     isActive: boolean,
     icon?: string,
     windowState: WindowState,
-    menuItems?:Record<string,menuItem[]>
+    menuItems?: Record<string, menuItem[]>
+    windowFullScreen?: boolean,
+    onWindowFullScreen: (isFullscreen: boolean) => void,
     onActive: () => void,
     onMinimise: () => void,
     onClose: () => void,
@@ -26,13 +28,14 @@ type WindowSize = {
     height: number,
 }
 
-const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, onMinimise, onClose, menuItems }: AppWindowNRProps) => {
+const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, onMinimise, onClose, menuItems, windowFullScreen, onWindowFullScreen }: AppWindowNRProps) => {
     const [windowPosition, setWindowPosition] = useState<WindowPosition>({
         x: 20,
         y: 80,
     })
 
     const [windowSize, setWindowSize] = useState<WindowSize>({ width: 600, height: 200 })
+    const [renderFullScreen, setRenderFullScreen] = useState<boolean>(false)
 
     const isDragging = useRef<boolean>(false)
     const [isStateDraggin, setIsStateDraggin] = useState<Boolean>(false)
@@ -117,8 +120,8 @@ const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, o
         if (!isDragging.current) return;
 
         const windowDimensions = {
-            x: innerWidth - 600,
-            y: innerHeight - 200,
+            x: innerWidth - windowSize.width,
+            y: innerHeight - windowSize.height,
         }
         // console.log("window dimensions", windowDimensions)
         // console.log("Positions Setting", e.clientX - startingPosition.current.x, e.clientY - startingPosition.current.y)
@@ -140,16 +143,27 @@ const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, o
         e.currentTarget.releasePointerCapture(e.pointerId)
     }
 
+    const onFullScreen = (isFullScreen: boolean) => {
+        // setWindowPosition({x:0,y:0})
+        onWindowFullScreen(isFullScreen)
+        if(isFullScreen){
+            setRenderFullScreen(true)
+        }
+        else{setTimeout(() => {
+            setRenderFullScreen(false)
+        }, 200)}
+    }
+
     return (
         <AppWindowContext value={{ onMenuClickRef: menuFunctionRef }}>
             <Activity mode={`${windowState === "maximised" ? 'visible' : 'hidden'}`}>
                 {isActive && <title>{title}</title>}
                 <div
-                    className={`app-window ${isActive ? 'windowActive' : ''}`}
+                    className={`app-window ${isActive ? 'windowActive' : ''} ${renderFullScreen ? 'window-fullscreen-animate' : ''}`}
                     style={{
-                        transform: `translate(${windowPosition.x}px, ${windowPosition.y}px)`,
-                        width: `${windowSize.width}px`,
-                        height: `${windowSize.height}px`
+                        transform: `translate(${windowFullScreen ? '0' : windowPosition.x}px, ${windowFullScreen ? '0' : windowPosition.y}px)`,
+                        width: windowFullScreen ? 'calc( 100% - 0.7rem )' : `${windowSize.width}px`,
+                        height: windowFullScreen ? '99%' : `${windowSize.height}px`
                     }}
                     onMouseDown={() => {
                         if (!isActive) {
@@ -157,70 +171,74 @@ const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, o
                         }
                     }
                     }
-                    // onPointerEnter={() => {
-                    //     if (!isActive) {
-                    //         onActive()
-                    //     }
-                    // }}
+                // onPointerEnter={() => {
+                //     if (!isActive) {
+                //         onActive()
+                //     }
+                // }}
                 >
-                    <div
+                    {!windowFullScreen && <><div
                         className='dimension-se'
                         onPointerDown={(e) => handlePointerDownResize(e, "se")}
                         onPointerMove={handlePointerMoveResizing}
                         onPointerUp={handlePointerUpResize}
                     >
                     </div>
-                    <div
-                        className='dimension-e'
-                        onPointerDown={(e) => handlePointerDownResize(e, "e")}
-                        onPointerMove={handlePointerMoveResizing}
-                        onPointerUp={handlePointerUpResize}
-                    >
-                    </div>
-                    <div className='dimension-sw'
-                        onPointerDown={(e) => handlePointerDownResize(e, "sw")}
-                        onPointerMove={handlePointerMoveResizing}
-                        onPointerUp={handlePointerUpResize}
-                    >
-                    </div>
-                    <div className='dimension-w'
-                        onPointerDown={(e) => handlePointerDownResize(e, "w")}
-                        onPointerMove={handlePointerMoveResizing}
-                        onPointerUp={handlePointerUpResize}
-                    >
-                    </div>
-                    <div className='dimension-ne'
-                        onPointerDown={(e) => handlePointerDownResize(e, "ne")}
-                        onPointerMove={handlePointerMoveResizing}
-                        onPointerUp={handlePointerUpResize}
-                    >
-                    </div>
-                    <div className='dimension-n'
-                        onPointerDown={(e) => handlePointerDownResize(e, "n")}
-                        onPointerMove={handlePointerMoveResizing}
-                        onPointerUp={handlePointerUpResize}
-                    >
-                    </div>
-                    <div className='dimension-nw'
-                        onPointerDown={(e) => handlePointerDownResize(e, "nw")}
-                        onPointerMove={handlePointerMoveResizing}
-                        onPointerUp={handlePointerUpResize}
-                    >
-                    </div>
-                    <div className='dimension-s'
-                        onPointerDown={(e) => handlePointerDownResize(e, "s")}
-                        onPointerMove={handlePointerMoveResizing}
-                        onPointerUp={handlePointerUpResize}
-                    >
-                    </div>
+                        <div
+                            className='dimension-e'
+                            onPointerDown={(e) => handlePointerDownResize(e, "e")}
+                            onPointerMove={handlePointerMoveResizing}
+                            onPointerUp={handlePointerUpResize}
+                        >
+                        </div>
+                        <div className='dimension-sw'
+                            onPointerDown={(e) => handlePointerDownResize(e, "sw")}
+                            onPointerMove={handlePointerMoveResizing}
+                            onPointerUp={handlePointerUpResize}
+                        >
+                        </div>
+                        <div className='dimension-w'
+                            onPointerDown={(e) => handlePointerDownResize(e, "w")}
+                            onPointerMove={handlePointerMoveResizing}
+                            onPointerUp={handlePointerUpResize}
+                        >
+                        </div>
+                        <div className='dimension-ne'
+                            onPointerDown={(e) => handlePointerDownResize(e, "ne")}
+                            onPointerMove={handlePointerMoveResizing}
+                            onPointerUp={handlePointerUpResize}
+                        >
+                        </div>
+                        <div className='dimension-n'
+                            onPointerDown={(e) => handlePointerDownResize(e, "n")}
+                            onPointerMove={handlePointerMoveResizing}
+                            onPointerUp={handlePointerUpResize}
+                        >
+                        </div>
+                        <div className='dimension-nw'
+                            onPointerDown={(e) => handlePointerDownResize(e, "nw")}
+                            onPointerMove={handlePointerMoveResizing}
+                            onPointerUp={handlePointerUpResize}
+                        >
+                        </div>
+                        <div className='dimension-s'
+                            onPointerDown={(e) => handlePointerDownResize(e, "s")}
+                            onPointerMove={handlePointerMoveResizing}
+                            onPointerUp={handlePointerUpResize}
+                        >
+                        </div>
+                    </>}
 
                     <div
                         className={`app-title`}
 
                     >
                         <div
-                            className={`drag-window ${isStateDraggin ? 'grabing' : 'grab'}`}
-                            onPointerDown={handlePointerDown}
+                            className={`drag-window ${windowFullScreen ? "" : isStateDraggin ? 'grabing' : 'grab'}`}
+                            onPointerDown={(e) => {
+                                if (windowFullScreen) return
+                                handlePointerDown(e)
+                            }}
                             onPointerUp={handlePointerUp}
                             onPointerMove={handlePointerMove}
                             onPointerLeave={handlePointerUp}
@@ -242,6 +260,16 @@ const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, o
                                 -
                             </button>
                             <button
+                                className={`window-button ${isActive ? "maximise" : ""}`}
+                                onClick={
+                                    () => {
+                                        onFullScreen(!windowFullScreen)
+                                    }
+                                }
+                            >
+                                🗖
+                            </button>
+                            <button
                                 className={`window-button ${isActive ? "close" : ""}`}
                                 onClick={() => {
                                     console.log("ON close")
@@ -253,7 +281,7 @@ const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, o
                         </div>
                     </div>
                     <div>
-                        {menuItems && <TitleMenuBar menuItems={menuItems} onMenuClick={menuFunctionRef}/>}
+                        {menuItems && <TitleMenuBar menuItems={menuItems} onMenuClick={menuFunctionRef} />}
                     </div>
                     <div className='app-body'>
                         {children}

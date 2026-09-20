@@ -11,6 +11,7 @@
     border-radius: 20px;
     box-shadow: 0px 0px 20px 8px rgba(80, 80, 80, 0.736);
     border: 0.4px solid rgba(210, 205, 205, 0.622);
+    z-index: 3;
 
     .dimension-se {
         display: block;
@@ -145,17 +146,25 @@
                 height: 1.5rem;
                 width: 1.5rem;
             }
+            .window-button:hover{
+                font-weight: bolder;
+                color:rgb(0, 0, 0);
+            }
 
             .minimise {
-                background-color: blue;
-                color: white;
+                background-color: rgb(163, 163, 248);
+                color: rgb(163, 163, 248);
             }
 
             .close {
                 background-color:red; 
-                color: white;
+                color: red;
             }
 
+            .maximise{
+                background-color: rgb(234, 214, 37);
+                color: rgb(234, 214, 37);
+            }
         }
     }
 
@@ -181,5 +190,12 @@
 }
 
 .windowActive {
-    z-index: 3;
+    z-index: 4;
+}
+
+.window-fullscreen-animate{
+    border-radius: 0px;
+    transition: transform 0.2s ease-in-out, 
+    width 0.2s ease-in-out,  
+    height 0.2s ease-in-out;
 }

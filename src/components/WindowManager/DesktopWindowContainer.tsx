@@ -4,10 +4,14 @@ import { systemApps } from '@configs/systemApps'
 
 const DesktopWindowContainer = () => {
 
-  const { activeWindows, setActiveWindow, setWindowState, removeWindow, focusedWindow } = useWindowManagementStore()
+  const { activeWindows, setActiveWindow, setWindowState, removeWindow, focusedWindow, setWindowFullScreen } = useWindowManagementStore()
 
   return (
-    <div style={{ position: "relative" }}
+    <div style={{ 
+      position: "relative",
+      width:'100%',
+      height: '100%'
+    }}
       onContextMenu={(e) => {
         e.preventDefault()
         e.stopPropagation()
@@ -24,6 +28,8 @@ const DesktopWindowContainer = () => {
           icon={window.icon}
           onActive={() => setActiveWindow(id)}
           onMinimise={() => setWindowState(id, 'minimised')}
+          windowFullScreen={window.windowFullScreen}
+          onWindowFullScreen={(isFullScreen)=>{setWindowFullScreen(id,isFullScreen)}}
           onClose={() => { removeWindow(id) }}
           windowState={window.windowState}
           menuItems={window.windowMenuItems}

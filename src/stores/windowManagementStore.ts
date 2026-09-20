@@ -16,6 +16,7 @@ export interface WindowMangementStore {
     setActiveWindow: (id: string) => void,
     setWindowState: (id: string, winState: WindowState) => void,
     setWindowMenuItems: (id: string, menuItems: Record<string, menuItem[]>) => void,
+    setWindowFullScreen: (id:string, isFullscreen:boolean) => void,
 }
 
 export const useWindowManagementStore = create<WindowMangementStore>((set) => ({
@@ -35,6 +36,7 @@ export const useWindowManagementStore = create<WindowMangementStore>((set) => ({
                     active: true,
                     windowState: 'maximised',
                     iframeUrl: win.endPoint ?? "",
+                    windowFullScreen: false,
                     isSystem: win.isSystemApp,
                     systemComponentId: win.id,
                     windowMenuItems: win.menuItems,
@@ -72,4 +74,14 @@ export const useWindowManagementStore = create<WindowMangementStore>((set) => ({
             }
         }
     })),
+    setWindowFullScreen: (id, isFullscreen) => set(state=>({
+        activeWindows:{
+            ...state.activeWindows,
+            [id]:{
+                ...state.activeWindows[id],
+                windowFullScreen: isFullscreen
+            }
+        }
+    })
+    ),
 }))
