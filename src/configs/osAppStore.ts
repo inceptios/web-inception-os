@@ -111,5 +111,12 @@ export const OsAppStore: Record<string, StoreApp> = {
                 }
             ]
         }
+    },
+    "3":{
+        id: "file_explorer",
+        name: "System File Explorer",
+        icon: fileExplorer,
+        description: "File Explorer from system web database",
+        isSystemApp: true,
     }
 } as const
