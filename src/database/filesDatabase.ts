@@ -201,4 +201,50 @@ export class filesDatabase {
         })
     }
 
+    public async deleteFileNode(id:string):Promise<boolean>{
+        const db = await this.init()
+        return new Promise((resolve,reject)=>{
+            try{
+                const objectStore = db.transaction(this.store, "readwrite").objectStore(this.store)
+                const getRequest = objectStore.delete(id)
+                getRequest.onsuccess = ()=>{
+                    resolve(true)
+                }
+                getRequest.onerror = ()=>{
+                    reject("Error getting file")
+                }
+            }
+            catch(e){
+                console.error("Getting error in getting file",e)
+            }
+        })
+    }
+
+    public async getFolderNode(parentId:string, name:string):Promise<fileNode>{
+        const db = await this.init()
+
+        return new Promise((resolve,reject)=>{
+            try{
+                const objectStore = db.transaction(this.store, "readonly").objectStore(this.store)
+                const index = objectStore.index('by_parent_name')
+                const range = IDBKeyRange.only([parentId,name,'folder'])
+
+                const request = index.get(range)
+                request.onsuccess = ()=>{
+                    const node = request.result;
+                    if(node){
+                        resolve(node)
+                    }
+                    else{
+                        console.error("Error getting node, no node exist",{name,parentId})
+                        reject("Error getting node, no node exist")
+                    }
+                }
+            }
+            catch(e){
+                console.error("Error getting the file",e)
+                reject(`Error gettign node: ${e}`)
+            }
+        })
+    }
 }

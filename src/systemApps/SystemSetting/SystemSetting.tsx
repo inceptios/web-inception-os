@@ -1,11 +1,12 @@
 
 import './SystemSettings.css'
 import LeftSettingBar from "./LeftSettingBar"
-import {useState, type FC } from "react"
+import { useState, type FC } from "react"
 import ThemeSetting from "./components/ThemeSetting"
 import GeneralSetting from "./components/GeneralSetting"
 import { Scaffold } from 'web-inception-sdk/ui'
 import { useMenu } from '@components/WindowManager/hooks/useMenu'
+import type { SystemAppsPros } from '@configs/systemApps'
 
 const settingScreensTitles = {
   theme: "Theme",
@@ -33,26 +34,26 @@ const SettingScreens: Record<titleType, SettingScreen> = {
     icon: '/about-icon.svg',
   },
 }
-type SystemSettingProps = {
-  staringScreen?:titleType
+type SystemSettingProps = SystemAppsPros & {
+  staringScreen?: titleType
 }
 
-const SystemSetting:FC = ({staringScreen}:SystemSettingProps ) => {
-  
+const SystemSetting: FC<SystemSettingProps> = ({ staringScreen,windowId }: SystemSettingProps) => {
+
   const [settingScreen, setSettingScreen] = useState<titleType>(staringScreen ?? "about")
-  
+
   const CurrentSettingScreen = SettingScreens[settingScreen].component
-    
-  const MenuActionMap:Record<string,()=>void> = {
-    testing:()=>{
-      console.log("Tesing menu from app.",settingScreen)
+
+  const MenuActionMap: Record<string, () => void> = {
+    testing: () => {
+      console.log("Tesing menu from app.", settingScreen)
     },
-    openTheme:()=>{
+    openTheme: () => {
       setSettingScreen("theme")
     }
   }
-  
-  useMenu({menuActionMap:MenuActionMap})
+
+  useMenu({ menuActionMap: MenuActionMap })
 
   return (
     <Scaffold

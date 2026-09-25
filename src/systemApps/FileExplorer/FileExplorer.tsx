@@ -1,5 +1,6 @@
 import { useEffect, type FC } from "react"
 import { filesDatabase } from "../../database/filesDatabase"
+import { resolvePath } from "../../stores/fileExplorerStore"
 
 const FileExplorer: FC = () => {
     const FileDb = new filesDatabase()
@@ -93,11 +94,23 @@ const FileExplorer: FC = () => {
         })
     }
 
+    const getFolderNodes = ()=>{
+        console.log("Getting foler node")
+        FileDb.getFolderNode("root",'Mvp file')
+        .then((folderNode)=>{
+            console.log("Getting the node",folderNode)
+        })
+        .catch(e=>{
+            console.error("Error getting node",e)
+        })
+    }
+
     const recycleFileNode = ()=>{
         console.log("Shadow deletion started")
         FileDb.updateFileNode(
             "9ceb3140-0626-4021-8f83-0316d37d7d66",
             {
+                restoreParentId:"root",
                 parentId:"recycle"
             }
         )
@@ -106,6 +119,13 @@ const FileExplorer: FC = () => {
         })
         .catch((err)=>{
             console.error("Error updating file",err)
+        })
+    }
+
+    const resolvePathUI = ()=>{
+        resolvePath(FileDb,'/Mvp file')
+        .then((nodes)=>{
+            console.log("resolved nodes",nodes)
         })
     }
     return (<div>
@@ -137,8 +157,14 @@ const FileExplorer: FC = () => {
             <button onClick={getFileNode}>
                 getFileId
             </button>
+            <button onClick={getFolderNodes}>
+                get folder node
+            </button>
             <button onClick={recycleFileNode}>
                 recycle file
+            </button>
+            <button onClick={resolvePathUI}>
+                resolve mock path
             </button>
         </div>
     </div>)
