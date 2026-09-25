@@ -33,11 +33,13 @@ const SettingScreens: Record<titleType, SettingScreen> = {
     icon: '/about-icon.svg',
   },
 }
+type SystemSettingProps = {
+  staringScreen?:titleType
+}
 
-
-const SystemSetting = () => {
+const SystemSetting:FC = ({staringScreen}:SystemSettingProps ) => {
   
-  const [settingScreen, setSettingScreen] = useState<titleType>("theme")
+  const [settingScreen, setSettingScreen] = useState<titleType>(staringScreen ?? "about")
   
   const CurrentSettingScreen = SettingScreens[settingScreen].component
     

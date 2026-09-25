@@ -13,6 +13,9 @@ const DesktopLayout = ({children,onMenuOpen}:DesktopLayoutProps) => {
         flexDirection:"column", 
         height:"100svh",
         backgroundImage:"url(/wallpaper.jpg)",
+        backgroundSize:"cover",
+        backgroundRepeat:"no-repeat",
+        backgroundPosition:"centre",
         overflow:'hidden'
         }}
         onContextMenu={(e)=>{

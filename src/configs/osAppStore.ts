@@ -5,6 +5,7 @@ export type menuItem = {
     menuId: string,
     title: string,
     icon?: string,
+    monoIcon?:string,
     enabled: boolean,
     items?: menuItem[],
 }
@@ -39,6 +40,7 @@ export const OsAppStore: Record<string, StoreApp> = {
                 menuId: "save",
                 title: "Save",
                 enabled: true,
+                monoIcon:'/theme-icon.svg',
                 items: [
                     {
                         menuId: "save",
@@ -61,6 +63,7 @@ export const OsAppStore: Record<string, StoreApp> = {
                 menuId: "saveas",
                 title: "Save As",
                 enabled: true,
+                icon:'/setting.svg'
             },
             {
                 menuId: "download",

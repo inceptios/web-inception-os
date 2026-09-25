@@ -40,6 +40,11 @@ const TaskMenu = ({ menuVisible, onClose }: TaskMenuProps): ReactNode => {
             >
                 <div id="task-menu"
                     className={`${isAnimated ? "menu-visible" : "menu-hidden"}`}
+                    onClick={(e)=>{
+                        e.preventDefault()
+                        e.stopPropagation()
+                        console.log("Stoping for the menu")
+                    }}
                     onTransitionEnd={() => {
                         if (!menuVisible) {
                             setIsRendered(false)
