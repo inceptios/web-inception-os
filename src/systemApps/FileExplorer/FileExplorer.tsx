@@ -5,6 +5,8 @@ import type { SystemAppsPros } from "@configs/systemApps"
 import { initFileDatabase } from "../../database/files.instance"
 import type { fileNode } from "../../database/files.types"
 import type { breadcrumb } from "./FileExplorer.types"
+import { FolderIcon } from "./assects/FolderIcon"
+import { FileIcon } from "./assects/FileIcon"
 
 const FileExplorer: FC<SystemAppsPros> = ({windowId}) => {
     const [fileStats,setFileStatus] = useState<boolean>(false)
@@ -112,6 +114,9 @@ const FileExplorer: FC<SystemAppsPros> = ({windowId}) => {
         >
             create Folder
         </button>
+
+        <FolderIcon/>
+        <FileIcon/>
         </>
         }
     </div>)
