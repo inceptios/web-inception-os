@@ -1,172 +1,119 @@
-import { useEffect, type FC } from "react"
+import { useEffect, useState, type FC } from "react"
 import { filesDatabase } from "../../database/filesDatabase"
-import { resolvePath } from "../../stores/fileExplorerStore"
+import { resolvePath, useFileExplorerStore } from "../../stores/fileExplorerStore"
+import type { SystemAppsPros } from "@configs/systemApps"
+import { initFileDatabase } from "../../database/files.instance"
+import type { fileNode } from "../../database/files.types"
+import type { breadcrumb } from "./FileExplorer.types"
 
-const FileExplorer: FC = () => {
-    const FileDb = new filesDatabase()
-    useEffect(() => {
-        FileDb.init()
-            .then(() => {
-                console.log("Data base inited.")
-            })
+const FileExplorer: FC<SystemAppsPros> = ({windowId}) => {
+    const [fileStats,setFileStatus] = useState<boolean>(false)
+    const [nodeName,setNodeName] = useState<string>("")
+    const windowState= useFileExplorerStore((state)=>state.windowFolderMap[windowId])
+    const windowFiles = useFileExplorerStore(
+    (state) => windowState?.currentFolderId ? state.folderMap[windowState.currentFolderId] : undefined
+) || [];
+    const {changeDirectoryPath, openFolderById, createFile, jumpBreadcrumb} = useFileExplorerStore()
 
-        FileDb.getFiles()
-            .then((files) => {
-                console.log("Getting all the files", files)
-            },)
-            .catch((error) => {
-                console.error("Getting error", error)
-            })
-    }, [])
-
-    const addFilemvp = () => {
-        console.log("Adding folder")
-        FileDb.addFile({
-            id: crypto.randomUUID(),
-            parentId: "root",
-            givenName: "Mvp file",
-            type: "file",
-            lastModified: Date.now()
-        })
-            .then(ret => {
-                console.log("Adding file status on UI", ret)
-            })
-            .catch((e) => {
-                console.error("Adding file error", e)
-            })
+    const cdPath = ()=>{
+        changeDirectoryPath(windowId,"/")
     }
 
-    const addFoldermvp = () => {
-        console.log("Adding folder")
-        FileDb.addFile({
-            id: crypto.randomUUID(),
-            parentId: "root",
-            givenName: "Mvp file",
-            type: "folder",
-            lastModified: Date.now()
+    useEffect(()=>{
+        initFileDatabase()
+        .then(()=>{
+            changeDirectoryPath(windowId,"/")
+            setFileStatus(true)
         })
-            .then(ret => {
-                console.log("Adding file status on UI", ret)
-            })
-            .catch((e) => {
-                console.error("Adding file error", e)
-            })
-    }
+    },[])
 
-    const getFiles = () => {
-        console.log("Geting files")
-        FileDb.getFilesByParentId(
-            "root")
-            .then(
-                (nodes) => {
-                    console.log("got Files", nodes)
-                })
-            .catch(
-                (err) => { console.error("Error on ui for getting filesId", err) }
-            )
-
-    }
-
-    const getFileRoot= ()=>{
-        console.log("Getting file")
-        FileDb.getFileNode(
-            "root",
-            "Mvp2 file",
-        )
-        .then((node)=>{
-            console.log("getting the file on ui", node)
-        })
-        .catch(e=>{
-            console.error("Error in UI",e)
-        })
-    }
-
-    const getFileNode = ()=>{
-        console.log("Getting fil by id")
-        FileDb.getFileById(
-            "9ceb3140-0626-4021-8f83-0316d37d7d66"
-        )
-        .then((fileNode)=>{
-            console.log("Getting file Node",fileNode)
-        })
-        .catch((error)=>{
-            console.error("Error getting file",error)
-        })
-    }
-
-    const getFolderNodes = ()=>{
-        console.log("Getting foler node")
-        FileDb.getFolderNode("root",'Mvp file')
-        .then((folderNode)=>{
-            console.log("Getting the node",folderNode)
-        })
-        .catch(e=>{
-            console.error("Error getting node",e)
-        })
-    }
-
-    const recycleFileNode = ()=>{
-        console.log("Shadow deletion started")
-        FileDb.updateFileNode(
-            "9ceb3140-0626-4021-8f83-0316d37d7d66",
+    const updatePath = (
+        fileNode: fileNode
+    )=>{
+        if(fileNode.type === "file") return
+        openFolderById(windowId,
             {
-                restoreParentId:"root",
-                parentId:"recycle"
+                id:fileNode.id,
+                name:fileNode.givenName,
             }
         )
-        .then((status)=>{
-            console.log("success",status)
-        })
-        .catch((err)=>{
-            console.error("Error updating file",err)
+    }
+
+    const createFileUI = ()=>{
+        createFile(nodeName,"file",windowState.currentFolderId, windowId)
+        .then(
+            ()=>{
+                console.log("adidtion success")
+            }
+        )
+        .catch(()=>{
+            console.error("Error creating file.")
         })
     }
 
-    const resolvePathUI = ()=>{
-        resolvePath(FileDb,'/Mvp file')
-        .then((nodes)=>{
-            console.log("resolved nodes",nodes)
+    const createFolderUI = ()=>{
+        createFile(nodeName,"folder",windowState.currentFolderId, windowId)
+        .then(
+            ()=>{
+                console.log("adidtion success")
+            }
+        )
+        .catch(()=>{
+            console.error("Error creating file.")
         })
     }
+
+    const navigateBreadcrumb = (
+        breadcrumb: breadcrumb
+    )=>{
+        jumpBreadcrumb(windowId,breadcrumb)
+        .then(()=>{
+            console.log("success jumping")
+        })
+        .catch(()=>{
+            console.error("Error ui jump")
+        })
+    }
+
     return (<div>
         FileExplorer System.
+        {fileStats && <><button onClick={cdPath}>
+            get the files
+        </button>
+        Files and folder for  {windowState?.currentFolderId ? windowState.currentFolderId : ""} : 
+        {windowFiles.map((file)=>(
+            <button key={file.id} onDoubleClick={()=>{updatePath(file)}}>{file.givenName} : {file.type}</button>
+        ))}
+        <br></br>
+        Breadcrumb 
+        {
+            windowState?.breadcrumbArray ? windowState.breadcrumbArray.map(bread=>(
+                <button key={bread.id} onClick={()=>{navigateBreadcrumb(bread)}}>{bread.name}</button>
+            )) : ""
+        }
+        <br/>
+        createFile
+        <input
+            value={nodeName}
+            onChange={(e)=>{
+                setNodeName(e.target.value)
+            }}
+        />
         <button
-            onClick={addFilemvp}
+            onClick={createFileUI}
+            disabled = {windowFiles.some(fNode=>(fNode.givenName === nodeName && fNode.type==="file"))}
         >
-            Add file this one.
+            create File
         </button>
 
         <button
-            onClick={addFoldermvp}
+            onClick={createFolderUI}
+            disabled = {windowFiles.some(fNode=>(fNode.givenName === nodeName && fNode.type==="folder"))}
         >
-            Add Folder this one.
+            create Folder
         </button>
-
-        <button
-            onClick={getFiles}
-        >
-            get filesss
-        </button>
-        <button
-            onClick={getFileRoot}
-        >
-            get file node
-        </button>
-
-        <div>
-            <button onClick={getFileNode}>
-                getFileId
-            </button>
-            <button onClick={getFolderNodes}>
-                get folder node
-            </button>
-            <button onClick={recycleFileNode}>
-                recycle file
-            </button>
-            <button onClick={resolvePathUI}>
-                resolve mock path
-            </button>
-        </div>
+        </>
+        }
     </div>)
 }
 

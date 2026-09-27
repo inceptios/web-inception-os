@@ -33,31 +33,34 @@ export class filesDatabase {
     }
 
     public async addFile(node: fileNode): Promise<boolean> {
-        const db = await this.init()
 
+        if (!this.db) {
+            throw new Error("Db called before init")
+        }
         return new Promise((resolve, reject) => {
             try {
+                if (this.db) {
+                    const transaction = this.db.transaction(this.store, "readwrite")
 
-                const transaction = db.transaction(this.store, "readwrite")
+                    transaction.oncomplete = () => {
+                        console.log("Adding to the store success!!!")
+                    }
 
-                transaction.oncomplete = () => {
-                    console.log("Adding to the store success!!!")
-                }
+                    transaction.onerror = () => {
+                        console.error("Adding file failed")
+                        reject("Failure adding...")
+                    }
 
-                transaction.onerror = () => {
-                    console.error("Adding file failed")
-                    reject("Failure adding...")
-                }
-
-                const objectStore = transaction.objectStore(this.store)
-                const request = objectStore.put(node)
-                request.onsuccess = () => {
-                    console.log("Adding to the file success!!!")
-                    resolve(true)
-                }
-                request.onerror = (e) => {
-                    console.error("Error adding file", e)
-                    reject(`Error adding file : ${e}`)
+                    const objectStore = transaction.objectStore(this.store)
+                    const request = objectStore.put(node)
+                    request.onsuccess = () => {
+                        console.log("Adding to the file success!!!")
+                        resolve(true)
+                    }
+                    request.onerror = (e) => {
+                        console.error("Error adding file", e)
+                        reject(`Error adding file : ${e}`)
+                    }
                 }
             }
             catch (e) {
@@ -68,27 +71,30 @@ export class filesDatabase {
     }
 
     public async getFiles(): Promise<fileNode[]> {
-        const db = await this.init()
 
         return new Promise((resolve, reject) => {
             try {
 
-                const objStore = db.transaction(this.store, "readwrite").objectStore(this.store)
+                if (this.db) {
+                    const objStore = this.db.transaction(this.store, "readwrite").objectStore(this.store)
 
-                const request = objStore.openCursor()
-                const returnFileNodes: fileNode[] = []
+                    const request = objStore.openCursor()
+                    const returnFileNodes: fileNode[] = []
 
-                request.onsuccess = () => {
-                    const cursor = request.result;
-                    if (cursor) {
-                        returnFileNodes.push(cursor.value)
-                        cursor.continue();
-                    }
-                    else {
-                        resolve(returnFileNodes)
+                    request.onsuccess = () => {
+                        const cursor = request.result;
+                        if (cursor) {
+                            returnFileNodes.push(cursor.value)
+                            cursor.continue();
+                        }
+                        else {
+                            resolve(returnFileNodes)
+                        }
                     }
                 }
-
+                else {
+                    reject("Database not inited.")
+                }
             }
             catch (e) {
                 console.log("Error in getting all files: ", e)
@@ -98,151 +104,174 @@ export class filesDatabase {
     }
 
     public async getFilesByParentId(parentId: string): Promise<fileNode[]> {
-        const db = await this.init()
-        return new Promise((resolve,reject)=>{
+        return new Promise((resolve, reject) => {
             try {
+                if (this.db) {
+                    const objStore = this.db.transaction(this.store, "readwrite").objectStore(this.store)
+                    const index = objStore.index('parentId')
 
-            const objStore = db.transaction(this.store, "readwrite").objectStore(this.store)
-            const index = objStore.index('parentId')
+                    const range = IDBKeyRange.only(parentId)
 
-            const range = IDBKeyRange.only(parentId)
+                    const request = index.getAll(range)
 
-            const request = index.getAll(range)
-
-            request.onsuccess = () => {
-                const cursor = request.result;
-                if (cursor) {
-                    resolve(cursor)
-                    // returnNodes.push(cursor.value)
-                    // cursor.continue()
+                    request.onsuccess = () => {
+                        const cursor = request.result;
+                        if (cursor) {
+                            resolve(cursor)
+                            // returnNodes.push(cursor.value)
+                            // cursor.continue()
+                        }
+                        else {
+                            console.log("No array")
+                            // successCallback(returnNodes)
+                        }
+                    }
                 }
                 else {
-                    console.log("No array")
-                    // successCallback(returnNodes)
+                    reject("Database not inited.")
                 }
             }
-        }
-        catch (e) {
-            console.log("Error getting all files in ", parentId, " : ", e)
-            reject(`${e}`)
-        }
+            catch (e) {
+                console.log("Error getting all files in ", parentId, " : ", e)
+                reject(`${e}`)
+            }
         })
     }
 
-    public async getFileNode(parentId:string, name:string):Promise<fileNode>{
-        const db = await this.init()
+    public async getFileNode(parentId: string, name: string): Promise<fileNode> {
 
-        return new Promise((resolve,reject)=>{
-            try{
-                const objectStore = db.transaction(this.store, "readonly").objectStore(this.store)
-                const index = objectStore.index('by_parent_name')
-                const range = IDBKeyRange.only([parentId,name,'file'])
+        return new Promise((resolve, reject) => {
+            try {
+                if (this.db) {
+                    const objectStore = this.db.transaction(this.store, "readonly").objectStore(this.store)
+                    const index = objectStore.index('by_parent_name')
+                    const range = IDBKeyRange.only([parentId, name, 'file'])
 
-                const request = index.get(range)
-                request.onsuccess = ()=>{
-                    const node = request.result;
-                    if(node){
-                        resolve(node)
-                    }
-                    else{
-                        console.error("Error getting node"
-                        )
-                        reject("Error gettign node.")
+                    const request = index.get(range)
+                    request.onsuccess = () => {
+                        const node = request.result;
+                        if (node) {
+                            resolve(node)
+                        }
+                        else {
+                            console.error("Error getting node"
+                            )
+                            reject("Error gettign node.")
+                        }
                     }
                 }
+                else {
+                    reject("Database not inited.")
+                }
             }
-            catch(e){
-                console.error("Error getting the file",e)
+            catch (e) {
+                console.error("Error getting the file", e)
                 reject(`Error gettign node: ${e}`)
             }
         })
     }
 
-    public async getFileById(id:string):Promise<fileNode>{
-        const db = await this.init()
-        return new Promise((resolve,reject)=>{
-            try{
-                const objectStore = db.transaction(this.store, "readwrite").objectStore(this.store)
-                const getRequest = objectStore.get(id)
-                getRequest.onsuccess = ()=>{
-                    const node = getRequest.result
-                    resolve(node)
+    public async getFileById(id: string): Promise<fileNode> {
+        return new Promise((resolve, reject) => {
+            try {
+                if (this.db) {
+                    const objectStore = this.db.transaction(this.store, "readwrite").objectStore(this.store)
+                    const getRequest = objectStore.get(id)
+                    getRequest.onsuccess = () => {
+                        const node = getRequest.result
+                        resolve(node)
+                    }
+                    getRequest.onerror = () => {
+                        reject("Error getting file")
+                    }
                 }
-                getRequest.onerror = ()=>{
-                    reject("Error getting file")
+                else {
+                    reject("Database not inited.")
                 }
             }
-            catch(e){
-                console.error("Getting error in getting file",e)
+            catch (e) {
+                console.error("Getting error in getting file", e)
             }
         })
     }
 
-    public async updateFileNode(Id:string, updates:Partial<fileNode>):Promise<boolean>{
-        const db = await this.init()
+    public async updateFileNode(Id: string, updates: Partial<fileNode>): Promise<boolean> {
         const exisitingFileNode = await this.getFileById(Id)
 
-        return new Promise((resolve,reject)=>{
-            try{
-                if(!exisitingFileNode){
-                    reject("Not getting the node.")
-                }
-                const updatedNode = {...exisitingFileNode, ...updates}
-                const objectStore = db.transaction(this.store, "readwrite").objectStore(this.store)
-                const putRequest = objectStore.put(updatedNode)
+        return new Promise((resolve, reject) => {
+            try {
+                if (this.db) {
+                    if (!exisitingFileNode) {
+                        reject("Not getting the node.")
+                    }
+                    const updatedNode = { ...exisitingFileNode, ...updates }
+                    const objectStore = this.db.transaction(this.store, "readwrite").objectStore(this.store)
+                    const putRequest = objectStore.put(updatedNode)
 
-                putRequest.onsuccess = ()=>resolve(true)
-                putRequest.onerror = ()=>reject("Not able to update the file.")
+                    putRequest.onsuccess = () => resolve(true)
+                    putRequest.onerror = () => reject("Not able to update the file.")
+                }
+                else {
+                    reject("Database not inited.")
+                }
             }
-            catch(e){
-                console.error("Error recycleing the file",e)
+            catch (e) {
+                console.error("Error recycleing the file", e)
                 reject(`Error rejecting the File : ${e}`)
             }
         })
     }
 
-    public async deleteFileNode(id:string):Promise<boolean>{
-        const db = await this.init()
-        return new Promise((resolve,reject)=>{
-            try{
-                const objectStore = db.transaction(this.store, "readwrite").objectStore(this.store)
-                const getRequest = objectStore.delete(id)
-                getRequest.onsuccess = ()=>{
-                    resolve(true)
+    public async deleteFileNode(id: string): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            try {
+                if (this.db) {
+                    const objectStore = this.db.transaction(this.store, "readwrite").objectStore(this.store)
+                    const getRequest = objectStore.delete(id)
+                    getRequest.onsuccess = () => {
+                        resolve(true)
+                    }
+                    getRequest.onerror = () => {
+                        reject("Error getting file")
+                    }
                 }
-                getRequest.onerror = ()=>{
-                    reject("Error getting file")
+                else {
+                    reject("database not inited.")
                 }
             }
-            catch(e){
-                console.error("Getting error in getting file",e)
+            catch (e) {
+                console.error("Getting error in getting file", e)
             }
         })
     }
 
-    public async getFolderNode(parentId:string, name:string):Promise<fileNode>{
-        const db = await this.init()
+    public async getFolderNode(parentId: string, name: string): Promise<fileNode> {
 
-        return new Promise((resolve,reject)=>{
-            try{
-                const objectStore = db.transaction(this.store, "readonly").objectStore(this.store)
-                const index = objectStore.index('by_parent_name')
-                const range = IDBKeyRange.only([parentId,name,'folder'])
+        return new Promise((resolve, reject) => {
+            try {
+                if (this.db) {
+                    const objectStore = this.db.transaction(this.store, "readonly").objectStore(this.store)
+                    const index = objectStore.index('by_parent_name')
+                    const range = IDBKeyRange.only([parentId, name, 'folder'])
 
-                const request = index.get(range)
-                request.onsuccess = ()=>{
-                    const node = request.result;
-                    if(node){
-                        resolve(node)
-                    }
-                    else{
-                        console.error("Error getting node, no node exist",{name,parentId})
-                        reject("Error getting node, no node exist")
+                    const request = index.get(range)
+                    request.onsuccess = () => {
+                        const node = request.result;
+                        if (node) {
+                            resolve(node)
+                        }
+                        else {
+                            console.error("Error getting node, no node exist", { name, parentId })
+                            reject("Error getting node, no node exist")
+                        }
                     }
                 }
+                else {
+                    reject("Database not inited.")
+                }
             }
-            catch(e){
-                console.error("Error getting the file",e)
+            catch (e) {
+                console.error("Error getting the file", e)
                 reject(`Error gettign node: ${e}`)
             }
         })

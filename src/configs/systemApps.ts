@@ -9,5 +9,5 @@ export type SystemAppsPros = {
 
 export const systemApps: Record<string, FC<SystemAppsPros>>= {
     "system_setting":SystemSetting,
-    "file_explorer":FileExplorer
+    "file_explorer":FileExplorer,
 }
