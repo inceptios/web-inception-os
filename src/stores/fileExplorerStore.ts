@@ -13,7 +13,7 @@ export interface FileExplorerStore {
     folderMap: Record<string, fileNode[]>,
     windowFolderMap: Record<string, WindowFolderState>,
     changeDirectoryPath: (windowId: string, path: string) => Promise<void>,
-    createFile : (fileName:string, type: "file"| "folder", parentId: string, windowId:string)=> Promise<void>,
+    createFile : (fileName:string, type: "file"| "folder", parentId: string)=> Promise<void>,
     openFolderById: (windowId: string, breadcrumb: breadcrumb) => Promise<void>,
     jumpBreadcrumb : (windowId: string, breadcrumb: breadcrumb) => Promise<void>,
 }
@@ -23,7 +23,7 @@ export const resolvePath = async (FileDb: filesDatabase, path: string): Promise<
         if (path === "/") {
             return [{
                 id: "root",
-                name: "root",
+                name: "Root",
             }]
         }
         const fileNames = path.split('/').slice(1,)
@@ -115,7 +115,7 @@ export const useFileExplorerStore = create<FileExplorerStore>((set, get) => ({
             Promise.reject("Error opening folder")
         }
     },
-    createFile: async (fileName:string, type: "file"| "folder", parentId: string, windowId:string): Promise<void>=>{
+    createFile: async (fileName:string, type: "file"| "folder", parentId: string): Promise<void>=>{
         try{
             const node:fileNode = {
                 id: crypto.randomUUID(),

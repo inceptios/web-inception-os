@@ -8,7 +8,6 @@ import TaskMenu from './components/TaskMenu/TaskMenu'
 import DesktopWindowContainer from '@components/WindowManager/DesktopWindowContainer'
 import { useThemeStore } from './stores/ThemeStore'
 import ContextMenu from '@components/ContextMenu/ContextMenuBackdrop'
-import { initFileDatabase } from './database/files.instance'
 
 function App() {
   const [tastMenuOpen,setTaskMenuOpen] = useState<boolean>(false)

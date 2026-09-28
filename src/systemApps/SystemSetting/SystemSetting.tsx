@@ -38,7 +38,7 @@ type SystemSettingProps = SystemAppsPros & {
   staringScreen?: titleType
 }
 
-const SystemSetting: FC<SystemSettingProps> = ({ staringScreen,windowId }: SystemSettingProps) => {
+const SystemSetting: FC<SystemSettingProps> = ({ staringScreen }: SystemSettingProps) => {
 
   const [settingScreen, setSettingScreen] = useState<titleType>(staringScreen ?? "about")
 
