@@ -5,7 +5,7 @@ export type menuItem = {
     menuId: string,
     title: string,
     icon?: string,
-    monoIcon?:string,
+    monoIcon?: string,
     enabled: boolean,
     items?: menuItem[],
 }
@@ -40,7 +40,7 @@ export const OsAppStore: Record<string, StoreApp> = {
                 menuId: "save",
                 title: "Save",
                 enabled: true,
-                monoIcon:'/theme-icon.svg',
+                monoIcon: '/theme-icon.svg',
                 items: [
                     {
                         menuId: "save",
@@ -63,7 +63,7 @@ export const OsAppStore: Record<string, StoreApp> = {
                 menuId: "saveas",
                 title: "Save As",
                 enabled: true,
-                icon:'/setting.svg'
+                icon: '/setting.svg'
             },
             {
                 menuId: "download",
@@ -112,11 +112,32 @@ export const OsAppStore: Record<string, StoreApp> = {
             ]
         }
     },
-    "3":{
+    "3": {
         id: "file_explorer",
         name: "System File Explorer",
         icon: fileExplorer,
         description: "File Explorer from system web database",
         isSystemApp: true,
+        menuItems: {
+            File: [
+                {
+                    menuId: "create",
+                    title: "Create New",
+                    enabled: true,
+                    items: [
+                        {
+                            menuId: "newfile",
+                            title: "New File",
+                            enabled: true,
+                        },
+                        {
+                            menuId: "newFolder",
+                            title: "New Folder",
+                            enabled: true,
+                        }
+                    ]
+                }
+            ]
+        }
     }
 } as const

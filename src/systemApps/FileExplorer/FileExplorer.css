@@ -5,8 +5,6 @@
     display: flex;
     flex-direction: column;
 
-
-
     #file-explorer-grid {
         display: flex;
         flex-direction: row;
@@ -20,9 +18,20 @@
             background: none;
             border: none;
             padding: 0.3rem;
+            color:inherit;
+            display:flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 5rem;
+            overflow: hidden;
 
             p {
                 margin: 0px;
+                text-overflow: ellipsis;
+                width: 4rem;
+            }
+            input{
+                width: 3rem;
             }
         }
 
@@ -35,7 +44,7 @@
 
     #path-container {
         border-radius: 6px;
-        background-color: #d5d5d6;
+        background-color: var( --primary-container );
         padding: 0.4rem;
         display: flex;
         flex-direction: row;
@@ -46,12 +55,13 @@
         .bread-btn-container {
             display: flex;
             flex-direction: row;
-            align-items: start;
+            align-items: end;
 
             .bread-btn {
                 background: transparent;
                 border: none;
-                height: 1.2rem;
+                height: 1.4rem;
+                color: var(--on-primary-container);
             }
 
             .bread-btn:hover {

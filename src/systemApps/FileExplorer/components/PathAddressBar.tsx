@@ -15,7 +15,7 @@ const PathAddressBar = ({ breadcrumbs, jumpBreadcrump }: PathAddressBarProps) =>
                     <div key={bread.id}
                         className="bread-btn-container"
                     >
-                    {index === jumpBreadcrump.length-1 ? "" : ">"}
+                    {index === jumpBreadcrump.length-1 ? "" : "/"}
                     <button
                     className="bread-btn"
                         

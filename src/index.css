@@ -15,6 +15,8 @@
   --primary: #618fda;
   --primary-text: rgb(51, 48, 48);
 
+  --secondary: #b8d1f8;
+
   --primary-active: #286ede;
   --primary-active-text: white;
 
@@ -23,6 +25,9 @@
 
   --title-menu-btn: #d4d5d8;
   --title-menu-bg:#f3f4f6a7;
+
+  --primary-container: #d5d5d6;
+  --on-primary-container: rgb(0, 0, 0);
 }
 
 body {
@@ -52,4 +57,7 @@ body {
 
   --title-menu-btn: #a0a0a5;
   --title-menu-bg:rgba(11, 8, 8, 0.45);
+
+  --primary-container: #4c4c4f;
+  --on-primary-container: rgb(255, 255, 255);
 }
