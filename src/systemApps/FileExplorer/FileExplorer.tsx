@@ -162,19 +162,19 @@ const FileExplorer: FC<SystemAppsPros> = ({ windowId }) => {
                 console.error("Error creating file.")
             })
     }
-    const createFileWithDataUI = () => {
-        const data = new Blob(["This is the test part for the test file in the browser with testing things"], { type: "text/plain" })
-        createDataFile(nodeName, "file", windowState.currentFolderId, data)
-            .then(
-                () => {
-                    console.log("adidtion success")
-                    setAddingNode(null)
-                }
-            )
-            .catch(() => {
-                console.error("Error creating file.")
-            })
-    }
+    // const createFileWithDataUI = () => {
+    //     const data = new Blob(["This is the test part for the test file in the browser with testing things"], { type: "text/plain" })
+    //     createDataFile(nodeName, "file", windowState.currentFolderId, data)
+    //         .then(
+    //             () => {
+    //                 console.log("adidtion success")
+    //                 setAddingNode(null)
+    //             }
+    //         )
+    //         .catch(() => {
+    //             console.error("Error creating file.")
+    //         })
+    // }
 
     const createFolderUI = () => {
         createFile(nodeName, "folder", windowState.currentFolderId)

@@ -216,8 +216,8 @@ export class filesDatabase {
                 }
             }
             catch (e) {
-                console.error("Error recycleing the file", e)
-                reject(`Error rejecting the File : ${e}`)
+                console.error("Error updaing the file", e)
+                reject(`Error updaing  the File : ${e}`)
             }
         })
     }
