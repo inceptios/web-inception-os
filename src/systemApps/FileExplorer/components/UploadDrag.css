@@ -1,0 +1,21 @@
+.upload-drag-container{
+    position: absolute;
+    width: 100%;
+    height: calc( 100% - 2.5rem );
+    top:2.5rem;
+    left:0;
+    /* box-shadow: inset 0px 0px 2px 2px black; */
+    outline: 0.2rem solid var(--primary);
+    border-radius: calc(20px - 0.3rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+    background-color: #d7d8d950;
+    backdrop-filter: blur(10px);
+    p{
+        background-color: var(--secondary);
+        padding:2rem;
+        border-radius: 20px;
+    }
+}

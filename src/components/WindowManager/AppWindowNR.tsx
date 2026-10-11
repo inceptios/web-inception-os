@@ -34,7 +34,7 @@ const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, o
         y: 80,
     })
 
-    const [windowSize, setWindowSize] = useState<WindowSize>({ width: 600, height: 200 })
+    const [windowSize, setWindowSize] = useState<WindowSize>({ width: 600, height: 300 })
     const [renderFullScreen, setRenderFullScreen] = useState<boolean>(false)
 
     const isDragging = useRef<boolean>(false)

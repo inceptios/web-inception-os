@@ -5,4 +5,5 @@ export type fileNode ={
     restoreParentId?: string,
     type: "file" | "folder",
     lastModified: number,
+    data: File| Blob| null
 }

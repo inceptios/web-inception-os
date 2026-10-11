@@ -27,6 +27,7 @@
 
             p {
                 margin: 0px;
+                overflow: hidden;
                 text-overflow: ellipsis;
                 width: 4rem;
             }
@@ -34,7 +35,19 @@
                 width: 3rem;
             }
         }
-
+        
+        .tooltip{
+            position: absolute;
+            top: calc( anchor(bottom) + 0.2rem );
+            left: anchor(left);
+            background-color: #c5c7c9;
+            padding: 0.3rem;
+            border-radius: 10px;
+            p{
+                margin: 0px;
+                font-size: smaller;
+            }
+        }
         .node-btn:hover {
             background-color: #d4d5d8;
             border-radius: 8px;

@@ -8,9 +8,10 @@ import { FolderIcon } from "./assects/FolderIcon"
 import { FileIcon } from "./assects/FileIcon"
 import './FileExplorer.css'
 import PathAddressBar from "./components/PathAddressBar"
-import { Button, ContextMenu, DialogBox } from "web-inception-sdk/ui"
+import { ContextMenu, DialogBox } from "web-inception-sdk/ui"
 import Input from "./components/Input"
 import { useMenu } from "@components/WindowManager/hooks/useMenu"
+import UploadDrag from "./components/UploadDrag"
 
 const FileExplorer: FC<SystemAppsPros> = ({ windowId }) => {
     const [fileStats, setFileStatus] = useState<boolean>(false)
@@ -18,16 +19,23 @@ const FileExplorer: FC<SystemAppsPros> = ({ windowId }) => {
     const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
     const [contextCordinates, setContextCordinates] = useState<{ x: number, y: number }>({ x: 0, y: 0 })
     const [addingNode, setAddingNode] = useState<"file" | "folder" | null>(null)
+    const [activeContext, setActiveContext] = useState<keyof typeof contextMaps>("Global")
+    const [uploadDrag, setUploadDrag] = useState<boolean>(false)
+    const [tooltipNodeId, setTooltipNodeId] = useState<string | null>(null)
+
 
     const gridRef = useRef<HTMLDivElement | null>(null)
     const contextRef = useRef<HTMLDivElement | null>(null)
     const functionRef = useRef<((id: string) => void) | null>(null)
+    const fileInputRef = useRef<HTMLInputElement | null>(null)
+    const tooltipTimer = useRef<number | null>(null)
+    const seletedContextNode = useRef<fileNode | null>(null)
 
     const windowState = useFileExplorerStore((state) => state.windowFolderMap[windowId])
     const windowFiles = useFileExplorerStore(
         (state) => windowState?.currentFolderId ? state.folderMap[windowState.currentFolderId] : undefined
     ) || [];
-    const { changeDirectoryPath, openFolderById, createFile, jumpBreadcrumb } = useFileExplorerStore()
+    const { changeDirectoryPath, openFolderById, createFile, jumpBreadcrumb, createDataFile, deleteNode } = useFileExplorerStore()
 
     // const cdPath = ()=>{
     //     changeDirectoryPath(windowId,"/")
@@ -47,7 +55,26 @@ const FileExplorer: FC<SystemAppsPros> = ({ windowId }) => {
             console.log("new folder")
 
             setShowContextMenu(false)
+        },
+        addFile: () => {
+            if (fileInputRef) {
+                console.log("Ref is there")
+                fileInputRef.current?.click()
+            }
+            setShowContextMenu(false)
+        },
+        deleteNode: () => {
+            if (seletedContextNode.current) {
+                console.log("Deleteing node", seletedContextNode.current)
+                DeleteNodeUI(seletedContextNode.current.id, seletedContextNode.current.parentId)
+            }
+            setShowContextMenu(false)
         }
+    }
+
+    const DeleteNodeUI = (fileNodeId: string, parentId: string) => {
+        console.log("inside the function456")
+        deleteNode(fileNodeId, parentId)
     }
 
     useEffect(() => {
@@ -82,10 +109,34 @@ const FileExplorer: FC<SystemAppsPros> = ({ windowId }) => {
                     title: "New folder",
                     enabled: windowFiles.some(fNode => (fNode.givenName === nodeName && fNode.type === "folder"))
                 }
-            ]
+            ],
+
+        },
+        {
+            menuId: 'addFile',
+            title: "Add File",
+            enabled: true,
         }
 
     ]
+
+    const nodemenuItems = [
+        {
+            menuId: 'deleteNode',
+            title: "Delete",
+            enabled: true,
+        },
+        {
+            menuId: 'renameNode',
+            title: "Rename",
+            enabled: true
+        }
+    ]
+
+    const contextMaps = {
+        "Global": menuItems,
+        "Node": nodemenuItems,
+    }
 
     const updatePath = (
         fileNode: fileNode
@@ -111,6 +162,19 @@ const FileExplorer: FC<SystemAppsPros> = ({ windowId }) => {
                 console.error("Error creating file.")
             })
     }
+    const createFileWithDataUI = () => {
+        const data = new Blob(["This is the test part for the test file in the browser with testing things"], { type: "text/plain" })
+        createDataFile(nodeName, "file", windowState.currentFolderId, data)
+            .then(
+                () => {
+                    console.log("adidtion success")
+                    setAddingNode(null)
+                }
+            )
+            .catch(() => {
+                console.error("Error creating file.")
+            })
+    }
 
     const createFolderUI = () => {
         createFile(nodeName, "folder", windowState.currentFolderId)
@@ -123,6 +187,42 @@ const FileExplorer: FC<SystemAppsPros> = ({ windowId }) => {
             .catch(() => {
                 console.error("Error creating file.")
             })
+    }
+
+    const downloadFile = async (file: fileNode) => {
+        if (!file.data) { return }
+        const blobUrl = URL.createObjectURL(file.data)
+
+        const downloadLink = document.createElement('a');
+        downloadLink.href = blobUrl;
+        downloadLink.download = file.givenName;
+
+        // 2. Click it while it is completely unmounted
+        downloadLink.click();
+        downloadLink.remove();
+
+        // 3. Destroy the memory pointer
+        URL.revokeObjectURL(blobUrl);
+    }
+
+    const ProcessUpload = (Files: FileList | null) => {
+        if (Files === null) return;
+        const files = Array.from(Files)
+
+        console.log("Files array is ", files)
+
+        files.forEach((file) => {
+
+            if (file.type !== "" || (file.type === "" && file.size !== 0)) {
+                createDataFile(file.name, "file", windowState.currentFolderId, file)
+                    .then(() => {
+                        console.log("Upload suceess", file.name)
+                    })
+                    .catch(() => {
+                        console.error("file upload failed")
+                    })
+            }
+        })
     }
 
     const navigateBreadcrumb = (
@@ -155,7 +255,7 @@ const FileExplorer: FC<SystemAppsPros> = ({ windowId }) => {
             menuCoordinates={contextCordinates}
             contextRef={contextRef}
             functionRef={functionRef}
-            menuItems={menuItems}
+            menuItems={contextMaps[activeContext]}
         />
         {addingNode && <DialogBox
             dialogTitle={<h3 style={{ margin: 0 }}>Create New {addingNode}</h3>}
@@ -204,16 +304,34 @@ const FileExplorer: FC<SystemAppsPros> = ({ windowId }) => {
         <div
             id="file-explorer-grid"
 
+            onDragEnter={(e) => {
+                e.preventDefault()
+                console.log("Drag entry")
+                setUploadDrag(true)
+            }}
+            onDragLeave={(e) => {
+                e.preventDefault()
+                if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                    console.log("Drag really left")
+                    setUploadDrag(false)
+                }
+            }}
+            onDragOver={(e) => {
+                e.preventDefault()
+            }}
+            onDrop={(e) => {
+                e.preventDefault()
+                setUploadDrag(false)
+                ProcessUpload(e.dataTransfer.files)
+            }}
             onContextMenu={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
                 if (gridRef.current) {
+                    setActiveContext("Global")
                     setShowContextMenu(!showContextMenu)
                     const boundingX = gridRef.current.getBoundingClientRect().x
                     const boundingY = gridRef.current.getBoundingClientRect().y
-                    console.log("Cornates", {
-                        boundingX, boundingY, clientX: e.clientX, clientY: e.clientY, x: e.clientX - boundingX, y: e.clientY - boundingY
-                    })
                     setContextCordinates({
                         x: e.clientX - boundingX,
                         y: e.clientY - boundingY,
@@ -224,23 +342,70 @@ const FileExplorer: FC<SystemAppsPros> = ({ windowId }) => {
                 setShowContextMenu(false)
             }}
         >
-            {windowFiles.map(file => {
+            {uploadDrag && <UploadDrag />
+            }
+            {windowFiles.sort((a, b) => (
+                a.givenName.localeCompare(b.givenName)
+            )).map(file => {
                 return (
-                    <button
-                        key={file.id}
-                        className="node-btn"
-                        onDoubleClick={() => {
-                            if (file.type === "folder") { updatePath(file) }
-                        }}
-                        onContextMenu={(e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
-                        }}
-                    >
-                        {file.type == "file" ? <FileIcon width={48} height={48} /> :
-                            <FolderIcon width={48} height={48} />}
-                        <p>{file.givenName}</p>
-                    </button>
+                    <>
+                        <button
+                            key={file.id}
+                            className="node-btn"
+                            onDoubleClick={() => {
+                                if (file.type === "folder") { updatePath(file) }
+                                else {
+                                    downloadFile(file)
+                                }
+                            }}
+                            onContextMenu={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+
+                                if (gridRef.current) {
+                                    seletedContextNode.current = file
+                                    setActiveContext("Node")
+                                    setShowContextMenu(!showContextMenu)
+                                    const boundingX = gridRef.current.getBoundingClientRect().x
+                                    const boundingY = gridRef.current.getBoundingClientRect().y
+                                    setContextCordinates({
+                                        x: e.clientX - boundingX,
+                                        y: e.clientY - boundingY,
+                                    })
+                                }
+                            }}
+                            onMouseEnter={() => {
+                                tooltipTimer.current = setTimeout(() => {
+                                    console.log("Mouse Enter")
+                                    setTooltipNodeId(file.id)
+                                }, 500)
+                            }}
+                            onMouseLeave={() => {
+                                console.log("Mouse leave")
+                                if (tooltipTimer.current) {
+                                    clearTimeout(tooltipTimer.current)
+                                    setTooltipNodeId(null)
+                                }
+                            }}
+                            style={{
+                                anchorName: `--anchor-btn-${file.id}`
+                            }}
+                        >
+                            {file.type == "file" ? <FileIcon width={48} height={48} /> :
+                                <FolderIcon width={48} height={48} />}
+                            <p>{file.givenName}</p>
+                        </button>
+                        {tooltipNodeId === file.id &&
+                            <div className="tooltip"
+                                style={{
+                                    positionAnchor: `--anchor-btn-${file.id}`
+                                }}
+                            >
+                                <p>
+                                    {file.givenName}
+                                </p>
+                            </div>}
+                    </>
                 )
             })}
         </div>
@@ -257,17 +422,21 @@ const FileExplorer: FC<SystemAppsPros> = ({ windowId }) => {
                 }}
             />
             <button
-                onClick={createFileUI}
+                onClick={createFileWithDataUI}
                 disabled={windowFiles.some(node => node.givenName === nodeName && node.type === "file")}
             >
                 Create File
-            </button>
-            <button
-                onClick={createFolderUI}
-                disabled={windowFiles.some(node => node.givenName === nodeName && node.type === "folder")}
-            >
-                Create Folder
             </button> */}
+            <input
+                type="file"
+                ref={fileInputRef}
+                style={{
+                    display: 'none'
+                }}
+                onChange={(e) => {
+                    ProcessUpload(e.target.files)
+                }}
+            />
         </div>
     </div >)
 }

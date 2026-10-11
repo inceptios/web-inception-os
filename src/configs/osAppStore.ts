@@ -131,7 +131,7 @@ export const OsAppStore: Record<string, StoreApp> = {
                             enabled: true,
                         },
                         {
-                            menuId: "newFolder",
+                            menuId: "newfolder",
                             title: "New Folder",
                             enabled: true,
                         }

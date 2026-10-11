@@ -16,6 +16,8 @@ export interface FileExplorerStore {
     createFile : (fileName:string, type: "file"| "folder", parentId: string)=> Promise<void>,
     openFolderById: (windowId: string, breadcrumb: breadcrumb) => Promise<void>,
     jumpBreadcrumb : (windowId: string, breadcrumb: breadcrumb) => Promise<void>,
+    createDataFile : (fileName:string, type: "file"| "folder", parentId: string,data: File|Blob)=> Promise<void>,
+    deleteNode : (fileNodeId: string, parentId: string)=>Promise<void>,
 }
 
 export const resolvePath = async (FileDb: filesDatabase, path: string): Promise<breadcrumb[] | null> => {
@@ -79,7 +81,7 @@ export const useFileExplorerStore = create<FileExplorerStore>((set, get) => ({
         }
         catch (e) {
             console.error("Getting error while getting path", e)
-            Promise.reject("Error opening path.")
+            throw new Error("Error opening path.")
         }
 
     },
@@ -112,7 +114,7 @@ export const useFileExplorerStore = create<FileExplorerStore>((set, get) => ({
         }
         catch (e) {
             console.error("Error opeing folder", e)
-            Promise.reject("Error opening folder")
+            throw new Error("Error opening folder")
         }
     },
     createFile: async (fileName:string, type: "file"| "folder", parentId: string): Promise<void>=>{
@@ -122,7 +124,8 @@ export const useFileExplorerStore = create<FileExplorerStore>((set, get) => ({
                 parentId,
                 givenName: fileName,
                 type,
-                lastModified: Date.now()
+                lastModified: Date.now(),
+                data: null
             }
 
             const status = await FileDb.addFile(node)
@@ -141,7 +144,7 @@ export const useFileExplorerStore = create<FileExplorerStore>((set, get) => ({
         }
         catch(err){
             console.error("Error adding file",err)
-            Promise.reject("Error adding file")
+            throw new Error("Error adding file")
         }
     },
     jumpBreadcrumb: async (windowId: string, breadcrumb: breadcrumb): Promise<void> =>{
@@ -171,7 +174,60 @@ export const useFileExplorerStore = create<FileExplorerStore>((set, get) => ({
         }
         catch(e){
             console.error("Error going to breadcrumb",e)
-            Promise.reject("Error going to the breadcrumb")
+            throw new Error("Error going to the breadcrumb")
+        }
+    },
+
+    createDataFile: async (fileName:string, type: "file"| "folder", parentId: string, data: File|Blob): Promise<void>=>{
+        try{
+            const node:fileNode = {
+                id: crypto.randomUUID(),
+                parentId,
+                givenName: fileName,
+                type,
+                lastModified: Date.now(),
+                data
+            }
+
+            const status = await FileDb.addFile(node)
+            
+            if(status){
+                const refreshFiles = await FileDb.getFilesByParentId(parentId)
+                set(state=>{
+                    return {
+                        folderMap:{
+                            ...state.folderMap,
+                            [parentId]: refreshFiles
+                        },
+                    }
+                })
+            }
+        }
+        catch(err){
+            console.error("Error adding file",err)
+            throw new Error("Error adding file")
+        }
+    },
+
+    deleteNode : async (fileNodeId: string, parentId: string):Promise<void>=>{
+        try{
+            const deleteStatus = await FileDb.deleteFileNode(fileNodeId)
+
+            if(deleteStatus){
+                const refreshFiles = await FileDb.getFilesByParentId(parentId)
+                set(state=>{
+                    return{
+                        folderMap:{
+                            ...state.folderMap,
+                            [parentId]: refreshFiles
+                        }
+                    }
+                })
+            }
+        }
+        catch(e){
+            console.error("Error deleting the file",e)
+            throw new Error("Error deleteing file")
         }
     }
 }))
