@@ -1,0 +1,86 @@
+#file-explorer-container {
+    width: 100%;
+    height: 100%;
+    margin-top: 0.3rem;
+    display: flex;
+    flex-direction: column;
+
+    #file-explorer-grid {
+        display: flex;
+        flex-direction: row;
+        align-items: start;
+        margin-top: 0.3rem;
+        flex-grow: 1;
+        flex-wrap: wrap;
+        overflow: auto;
+
+        .node-btn {
+            background: none;
+            border: none;
+            padding: 0.3rem;
+            color:inherit;
+            display:flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 5rem;
+            overflow: hidden;
+
+            p {
+                margin: 0px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                width: 4rem;
+            }
+            input{
+                width: 3rem;
+            }
+        }
+        
+        .tooltip{
+            position: absolute;
+            top: calc( anchor(bottom) + 0.2rem );
+            left: anchor(left);
+            background-color: #c5c7c9;
+            padding: 0.3rem;
+            border-radius: 10px;
+            p{
+                margin: 0px;
+                font-size: smaller;
+            }
+        }
+        .node-btn:hover {
+            background-color: #d4d5d8;
+            border-radius: 8px;
+        }
+
+    }
+
+    #path-container {
+        border-radius: 6px;
+        background-color: var( --primary-container );
+        padding: 0.4rem;
+        display: flex;
+        flex-direction: row;
+        gap: 2px;
+        align-items: center;
+        justify-content: start;
+
+        .bread-btn-container {
+            display: flex;
+            flex-direction: row;
+            align-items: end;
+
+            .bread-btn {
+                background: transparent;
+                border: none;
+                height: 1.4rem;
+                color: var(--on-primary-container);
+            }
+
+            .bread-btn:hover {
+                background-color: #abacad;
+                border-radius: 8px;
+            }
+        }
+    }
+}

@@ -33,7 +33,7 @@ const DesktopWindowContainer = () => {
           onClose={() => { removeWindow(id) }}
           windowState={window.windowState}
           menuItems={window.windowMenuItems}
-        >{SystemComponent ? <SystemComponent {...window.props}/> :
+        >{SystemComponent ? <SystemComponent {...window.props} windowId={id}/> :
           "not system"
           }
         </AppWindowNR>
