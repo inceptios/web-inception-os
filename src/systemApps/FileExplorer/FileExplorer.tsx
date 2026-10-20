@@ -8,24 +8,22 @@ import { FolderIcon } from "./assects/FolderIcon"
 import { FileIcon } from "./assects/FileIcon"
 import './FileExplorer.css'
 import PathAddressBar from "./components/PathAddressBar"
-import { ContextMenu, DialogBox } from "web-inception-sdk/ui"
+import { DialogBox } from "web-inception-sdk/ui"
 import Input from "./components/Input"
 import { useMenu } from "@components/WindowManager/hooks/useMenu"
 import UploadDrag from "./components/UploadDrag"
+import { useContextMenuStore } from "../../stores/contextMenuStore"
+import type { menuItem } from "@configs/osAppStore"
 
 const FileExplorer: FC<SystemAppsPros> = ({ windowId }) => {
     const [fileStats, setFileStatus] = useState<boolean>(false)
     const [nodeName, setNodeName] = useState<string>("new File")
-    const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
-    const [contextCordinates, setContextCordinates] = useState<{ x: number, y: number }>({ x: 0, y: 0 })
     const [addingNode, setAddingNode] = useState<"file" | "folder" | null>(null)
-    const [activeContext, setActiveContext] = useState<keyof typeof contextMaps>("Global")
     const [uploadDrag, setUploadDrag] = useState<boolean>(false)
     const [tooltipNodeId, setTooltipNodeId] = useState<string | null>(null)
 
 
     const gridRef = useRef<HTMLDivElement | null>(null)
-    const contextRef = useRef<HTMLDivElement | null>(null)
     const functionRef = useRef<((id: string) => void) | null>(null)
     const fileInputRef = useRef<HTMLInputElement | null>(null)
     const tooltipTimer = useRef<number | null>(null)
@@ -37,6 +35,7 @@ const FileExplorer: FC<SystemAppsPros> = ({ windowId }) => {
     ) || [];
     const { changeDirectoryPath, openFolderById, createFile, jumpBreadcrumb, createDataFile, deleteNode } = useFileExplorerStore()
 
+    const {isContextMenuShown,setIsContextMenuShown,setMenuCoordinates,setContextMenuActions,setContextMenuItems} = useContextMenuStore()
     // const cdPath = ()=>{
     //     changeDirectoryPath(windowId,"/")
     // }
@@ -48,27 +47,27 @@ const FileExplorer: FC<SystemAppsPros> = ({ windowId }) => {
             console.log(
                 "new file"
             )
-            setShowContextMenu(false)
+            setIsContextMenuShown(false)
         },
         newfolder: () => {
             setAddingNode("folder")
             console.log("new folder")
 
-            setShowContextMenu(false)
+            setIsContextMenuShown(false)
         },
         addFile: () => {
             if (fileInputRef) {
                 console.log("Ref is there")
                 fileInputRef.current?.click()
             }
-            setShowContextMenu(false)
+            setIsContextMenuShown(false)
         },
         deleteNode: () => {
             if (seletedContextNode.current) {
                 console.log("Deleteing node", seletedContextNode.current)
                 DeleteNodeUI(seletedContextNode.current.id, seletedContextNode.current.parentId)
             }
-            setShowContextMenu(false)
+            setIsContextMenuShown(false)
         }
     }
 
@@ -93,7 +92,7 @@ const FileExplorer: FC<SystemAppsPros> = ({ windowId }) => {
         menuActionMap: fileFunctions
     })
 
-    const menuItems = [
+    const menuItems: menuItem[] = [
         {
             menuId: 'new',
             title: "New",
@@ -120,7 +119,7 @@ const FileExplorer: FC<SystemAppsPros> = ({ windowId }) => {
 
     ]
 
-    const nodemenuItems = [
+    const nodemenuItems: menuItem[] = [
         {
             menuId: 'deleteNode',
             title: "Delete",
@@ -132,11 +131,6 @@ const FileExplorer: FC<SystemAppsPros> = ({ windowId }) => {
             enabled: true
         }
     ]
-
-    const contextMaps = {
-        "Global": menuItems,
-        "Node": nodemenuItems,
-    }
 
     const updatePath = (
         fileNode: fileNode
@@ -250,13 +244,6 @@ const FileExplorer: FC<SystemAppsPros> = ({ windowId }) => {
             position: 'relative'
         }}
     >
-        <ContextMenu
-            isContextMenuShown={showContextMenu}
-            menuCoordinates={contextCordinates}
-            contextRef={contextRef}
-            functionRef={functionRef}
-            menuItems={contextMaps[activeContext]}
-        />
         {addingNode && <DialogBox
             dialogTitle={<h3 style={{ margin: 0 }}>Create New {addingNode}</h3>}
             confirmButton={
@@ -328,18 +315,17 @@ const FileExplorer: FC<SystemAppsPros> = ({ windowId }) => {
                 e.preventDefault()
                 e.stopPropagation()
                 if (gridRef.current) {
-                    setActiveContext("Global")
-                    setShowContextMenu(!showContextMenu)
-                    const boundingX = gridRef.current.getBoundingClientRect().x
-                    const boundingY = gridRef.current.getBoundingClientRect().y
-                    setContextCordinates({
-                        x: e.clientX - boundingX,
-                        y: e.clientY - boundingY,
+                    setIsContextMenuShown(!isContextMenuShown)
+                    setMenuCoordinates({
+                        x: e.pageX,
+                        y: e.pageY,
                     })
+                    setContextMenuItems(menuItems)
+                    setContextMenuActions(fileFunctions)
                 }
             }}
             onClick={() => {
-                setShowContextMenu(false)
+                setIsContextMenuShown(false)
             }}
         >
             {uploadDrag && <UploadDrag />
@@ -364,14 +350,13 @@ const FileExplorer: FC<SystemAppsPros> = ({ windowId }) => {
 
                                 if (gridRef.current) {
                                     seletedContextNode.current = file
-                                    setActiveContext("Node")
-                                    setShowContextMenu(!showContextMenu)
-                                    const boundingX = gridRef.current.getBoundingClientRect().x
-                                    const boundingY = gridRef.current.getBoundingClientRect().y
-                                    setContextCordinates({
-                                        x: e.clientX - boundingX,
-                                        y: e.clientY - boundingY,
+                                    setIsContextMenuShown(!isContextMenuShown)
+                                    setMenuCoordinates({
+                                        x: e.clientX,
+                                        y: e.clientY,
                                     })
+                                    setContextMenuItems(nodemenuItems)
+                                    setContextMenuActions(fileFunctions)
                                 }
                             }}
                             onMouseEnter={() => {
