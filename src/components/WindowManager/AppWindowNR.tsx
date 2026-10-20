@@ -1,9 +1,10 @@
-import { Activity, useRef, useState, type PointerEvent, type ReactNode } from 'react'
+import { Activity, useEffect, useRef, useState, type PointerEvent, type ReactNode } from 'react'
 import './AppWindow.css'
 import type { WindowState } from './Types'
 import { AppWindowContext } from './context/AppWindowMenuContext'
 import TitleMenuBar from '@components/TitleMenuBar/TitleMenuBar'
 import type { menuItem } from '@configs/osAppStore'
+import { SendShellHello } from '../../Icp/icpService'
 
 type AppWindowNRProps = {
     children: ReactNode,
@@ -17,6 +18,7 @@ type AppWindowNRProps = {
     onActive: () => void,
     onMinimise: () => void,
     onClose: () => void,
+    iframeRef: React.RefObject<HTMLIFrameElement | null>,
 }
 
 type WindowPosition = {
@@ -28,7 +30,20 @@ type WindowSize = {
     height: number,
 }
 
-const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, onMinimise, onClose, menuItems, windowFullScreen, onWindowFullScreen }: AppWindowNRProps) => {
+const AppWindowNR = ({
+    children,
+    title,
+    isActive,
+    icon,
+    onActive,
+    windowState,
+    onMinimise,
+    onClose,
+    menuItems,
+    windowFullScreen,
+    onWindowFullScreen,
+    iframeRef,
+}: AppWindowNRProps) => {
     const [windowPosition, setWindowPosition] = useState<WindowPosition>({
         x: 20,
         y: 80,
@@ -146,12 +161,14 @@ const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, o
     const onFullScreen = (isFullScreen: boolean) => {
         // setWindowPosition({x:0,y:0})
         onWindowFullScreen(isFullScreen)
-        if(isFullScreen){
+        if (isFullScreen) {
             setRenderFullScreen(true)
         }
-        else{setTimeout(() => {
-            setRenderFullScreen(false)
-        }, 200)}
+        else {
+            setTimeout(() => {
+                setRenderFullScreen(false)
+            }, 200)
+        }
     }
 
     return (
@@ -283,7 +300,11 @@ const AppWindowNR = ({ children, title, isActive, icon, onActive, windowState, o
                     <div>
                         {menuItems && <TitleMenuBar menuItems={menuItems} onMenuClick={menuFunctionRef} />}
                     </div>
-                    <div className='app-body'>
+                    <div className='app-body'
+                    style={{
+                        pointerEvents:`${isActive? 'auto': 'none'}`
+                    }}
+                    >
                         {children}
                     </div>
 

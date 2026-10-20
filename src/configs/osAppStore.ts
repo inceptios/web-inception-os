@@ -26,7 +26,7 @@ export const OsAppStore: Record<string, StoreApp> = {
         name: "File Explorer",
         icon: fileExplorer,
         description: "Hand Made Browser based basic file explorer",
-        endPoint: "",
+        endPoint: `${import.meta.env.VITE_IPC_TESTING}`,
         isSystemApp: false,
     },
     "2": {
