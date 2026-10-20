@@ -3,25 +3,34 @@ import './ContextMenuBackdrop.css'
 import { defaultContextMenu } from '@configs/systemContext'
 import { ContextMenu } from 'web-inception-sdk/ui'
 import { useContextMenuActions } from './ContextMenuActions'
+import { useContextMenuStore } from '../../stores/contextMenuStore'
 
-type MenuCoordinates = {
-    x: number,
-    y: number,
-}
+
 
 const ContextMenuBackdrop = () => {
+    const { contextActions } = useContextMenuActions()
 
-    const [isContextMenuShown, setIsContextMenuShown] = useState<boolean>(false)
-    const [menuCoordinates, setMenuCoordinates] = useState<MenuCoordinates>({ x: 10, y: 10 })
-    const {contextActions} = useContextMenuActions()
+    const { isContextMenuShown,
+        setIsContextMenuShown,
+        menuCoordinates,
+        setMenuCoordinates,
+        contextMenuItems,
+        contextMenuActions,
+    } = useContextMenuStore()
+
 
     const contextRef = useRef<HTMLDivElement | null>(null)
     const functionRef = useRef<((id: string) => void) | null>(null)
 
     useLayoutEffect(() => {
-        functionRef.current = (id: string) => { 
-            console.log("Getting the string called ", id) 
-            contextActions[`${id}`]?.()
+        functionRef.current = (id: string) => {
+            console.log("Getting the string called ", id)
+            if (contextMenuActions) {
+                contextMenuActions[`${id}`]?.()
+            }
+            else {
+                contextActions[`${id}`]?.()
+            }
         }
         if (!contextRef.current || !isContextMenuShown) return;
         const { offsetWidth, offsetHeight } = contextRef.current
@@ -54,6 +63,10 @@ const ContextMenuBackdrop = () => {
                 setMenuCoordinates({ x: e.clientX, y: e.clientY })
 
             }}
+            style={{
+                zIndex: `${isContextMenuShown ? 999 : 1}`
+            }}
+
         >
             <div
                 id='context-menu-backdrop'
@@ -69,7 +82,7 @@ const ContextMenuBackdrop = () => {
                 menuCoordinates={menuCoordinates}
                 contextRef={contextRef}
                 functionRef={functionRef}
-                menuItems={defaultContextMenu}
+                menuItems={contextMenuItems ?? defaultContextMenu}
                 onClose={() => {
                     setIsContextMenuShown(false)
                 }}
