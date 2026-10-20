@@ -1,9 +1,10 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 import './ContextMenuBackdrop.css'
 import { defaultContextMenu } from '@configs/systemContext'
 import { ContextMenu } from 'web-inception-sdk/ui'
 import { useContextMenuActions } from './ContextMenuActions'
 import { useContextMenuStore } from '../../stores/contextMenuStore'
+import { SentContextMenuId } from '../../Ipc/ipcContextMenu'
 
 
 
@@ -16,6 +17,7 @@ const ContextMenuBackdrop = () => {
         setMenuCoordinates,
         contextMenuItems,
         contextMenuActions,
+        iframeId
     } = useContextMenuStore()
 
 
@@ -25,7 +27,10 @@ const ContextMenuBackdrop = () => {
     useLayoutEffect(() => {
         functionRef.current = (id: string) => {
             console.log("Getting the string called ", id)
-            if (contextMenuActions) {
+            if(iframeId){
+                SentContextMenuId(iframeId,id)
+            }
+            else if (contextMenuActions) {
                 contextMenuActions[`${id}`]?.()
             }
             else {

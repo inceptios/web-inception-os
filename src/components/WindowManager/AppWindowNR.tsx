@@ -1,10 +1,9 @@
-import { Activity, useEffect, useRef, useState, type PointerEvent, type ReactNode } from 'react'
+import { Activity, useRef, useState, type PointerEvent, type ReactNode } from 'react'
 import './AppWindow.css'
 import type { WindowState } from './Types'
 import { AppWindowContext } from './context/AppWindowMenuContext'
 import TitleMenuBar from '@components/TitleMenuBar/TitleMenuBar'
 import type { menuItem } from '@configs/osAppStore'
-import { SendShellHello } from '../../Icp/icpService'
 
 type AppWindowNRProps = {
     children: ReactNode,
@@ -42,7 +41,7 @@ const AppWindowNR = ({
     menuItems,
     windowFullScreen,
     onWindowFullScreen,
-    iframeRef,
+    // iframeRef,
 }: AppWindowNRProps) => {
     const [windowPosition, setWindowPosition] = useState<WindowPosition>({
         x: 20,
@@ -301,9 +300,9 @@ const AppWindowNR = ({
                         {menuItems && <TitleMenuBar menuItems={menuItems} onMenuClick={menuFunctionRef} />}
                     </div>
                     <div className='app-body'
-                    style={{
-                        pointerEvents:`${isActive? 'auto': 'none'}`
-                    }}
+                        style={{
+                            pointerEvents: `${isActive ? 'auto' : 'none'}`
+                        }}
                     >
                         {children}
                     </div>

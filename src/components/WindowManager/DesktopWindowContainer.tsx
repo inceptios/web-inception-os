@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { useWindowManagementStore } from '../../stores/windowManagementStore'
 import AppWindowNR from './AppWindowNR'
 import { systemApps } from '@configs/systemApps'
-import { SendShellHello } from '../../Icp/icpService'
+import { SendShellHello } from '../../Ipc/ipcService'
 
 const DesktopWindowContainer = () => {
 
@@ -54,15 +54,15 @@ const DesktopWindowContainer = () => {
             }}
             onLoad={() => {
 
-              const handleInitBridge= (event: MessageEvent)=>{
-                console.log("shell message",{
-                  from:event.origin,
+              const handleInitBridge = (event: MessageEvent) => {
+                console.log("shell message", {
+                  from: event.origin,
                   message: event.data
                 })
-                if(event.origin === window.iframeUrl && event.data === "FRAME_HELLO" && iframeRef.current){
+                if (event.origin === window.iframeUrl && event.data === "FRAME_HELLO" && iframeRef.current) {
                   console.log("Sending Shell message")
-                  SendShellHello(window.id,iframeRef.current)
-                  removeEventListener("message",handleInitBridge)
+                  SendShellHello(window.id, iframeRef.current)
+                  removeEventListener("message", handleInitBridge)
                 }
               }
               addEventListener("message", handleInitBridge)

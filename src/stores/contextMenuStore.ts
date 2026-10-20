@@ -14,7 +14,9 @@ export interface ContextMenuStore {
     contextMenuItems: menuItem[] | null,
     contextMenuActions: Record<string, () => void> | null,
     setContextMenuActions: (actions: Record<string, () => void>) => void,
-    setContextMenuItems: (menuItems: menuItem[]) => void
+    setContextMenuItems: (menuItems: menuItem[]) => void,
+    iframeId: string | null,
+    setIframeId: (id:string)=>void,
 }
 
 export const useContextMenuStore = create<ContextMenuStore>((set) => ({
@@ -29,7 +31,8 @@ export const useContextMenuStore = create<ContextMenuStore>((set) => ({
             set({
                 isContextMenuShown:isShown,
                 contextMenuActions:null,
-                contextMenuItems: null
+                contextMenuItems: null,
+                iframeId: null,
             })
         }
     },
@@ -49,6 +52,12 @@ export const useContextMenuStore = create<ContextMenuStore>((set) => ({
     setContextMenuActions: (actions: Record<string, () => void>) => {
         set({
             contextMenuActions: actions
+        })
+    },
+    iframeId:null,
+    setIframeId : (id: string)=>{
+        set({
+            iframeId:id
         })
     }
 }))
